@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>God Mode | Admin Front18 Base</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Custom GoAdopt Styles -->
+    <style>
+        :root {
+            /* Tema Oficial Deep Violet & Coral */
+            --bg-canvas: #190C3A;
+            --bg-surface: #2D0F65;
+            --bg-surface-hover: #3b1c7a;
+            --primary-accent: #EA5944;
+            --primary-hover: #FD8972;
+            --danger-accent: #ef4444; /* Red 500 */
+            --success-accent: #10b981; /* Emerald 500 */
+            --text-main: #EFF3F4;
+            --text-muted: rgba(239, 243, 244, 0.6);
+            --border-subtle: rgba(239, 243, 244, 0.1);
+            --shadow-glow: rgba(234, 89, 68, 0.2);
+            --font-main: 'Outfit', 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); }
+        
+        body { 
+            background-color: var(--bg-canvas); 
+            color: var(--text-main); 
+            display: flex; 
+            height: 100vh; 
+            overflow: hidden; 
+            background-image: radial-gradient(circle at 50% 0%, rgba(0, 255, 128, 0.05) 0%, transparent 40%);
+        }
+
+        /* Títulos */
+        h1, h2, h3 { font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
+        p { font-weight: 400; line-height: 1.6; color: var(--text-muted); }
+
+        /* Utilitarios */
+        .text-accent { color: var(--primary-accent); }
+        .bg-surface { background-color: var(--bg-surface); }
+        .border-subtle { border: 1px solid var(--border-subtle); }
+        .text-danger { color: var(--danger-accent); }
+        .text-success { color: var(--success-accent); }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background-color: var(--bg-surface);
+            border-right: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            z-index: 20;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+        }
+
+        .brand {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 1.2rem;
+            background: linear-gradient(to right, var(--bg-surface), rgba(0,0,0,0.2));
+        }
+        .brand-dot {
+            width: 8px; height: 8px; border-radius: 50%; background: var(--danger-accent); margin-right: 12px;
+            box-shadow: 0 0 10px var(--danger-accent); animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.2); } 100% { opacity: 1; transform: scale(1); } }
+
+        .user-pill {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(0,0,0,0.2);
+        }
+        .user-pill .avatar {
+            width: 36px; height: 36px;
+            background-color: rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.5);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--primary-accent);
+        }
+        .user-pill span { font-size: 0.75rem; font-weight: 700; color: #cbd5e1; }
+        .user-pill .sub { font-size: 0.6rem; color: var(--danger-accent); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 900; }
+
+        .nav-menu { flex: 1; padding: 16px 16px; overflow-y: auto; }
+        .nav-menu::-webkit-scrollbar { width: 4px; }
+        .nav-menu::-webkit-scrollbar-track { background: transparent; }
+        .nav-menu::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+        .nav-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.15em; color: #475569; margin: 24px 0 8px 12px; font-weight: 900; }
+
+        .nav-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 14px; border-radius: 8px;
+            color: var(--text-muted); text-decoration: none; font-size: 0.8rem; font-weight: 500;
+            transition: all 0.2s; border-left: 3px solid transparent; margin-bottom: 4px;
+            cursor: pointer;
+        }
+        .nav-item-content { display: flex; align-items: center; gap: 12px; }
+        
+        .nav-item:hover { background-color: rgba(255,255,255,0.03); color: var(--text-main); }
+        .nav-item.active {
+            background-color: rgba(99, 102, 241, 0.1);
+            color: #818cf8;
+            border-left-color: var(--primary-accent);
+        }
+
+        .nav-item.danger:hover { background-color: rgba(239, 68, 68, 0.05); color: #f87171; }
+        .nav-item.danger.active { background-color: rgba(239, 68, 68, 0.1); color: #f87171; border-left-color: var(--danger-accent); }
+
+        .badge-count { background: rgba(99, 102, 241, 0.2); color: #818cf8; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: 900; }
+
+        /* Main Content */
+        .main-wrapper { flex: 1; display: flex; flex-direction: column; position: relative; }
+        
+        .topbar {
+            height: 70px;
+            background-color: rgba(2, 6, 23, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 40px;
+            z-index: 10;
+        }
+
+        .content { flex: 1; overflow-y: auto; padding: 40px; position: relative; z-index: 5; }
+
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* UI Elements */
+        .glass-card {
+            background-color: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            border: 1px solid var(--border-subtle);
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: border-color 0.2s;
+        }
+        .glass-card.highlight { border-color: rgba(99, 102, 241, 0.3); background: rgba(99, 102, 241, 0.05); }
+
+        .btn-panic {
+            background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--danger-accent); font-size: 0.65rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em;
+            padding: 8px 16px; border-radius: 20px; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 8px;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+        }
+        .btn-panic:hover { background-color: rgba(239, 68, 68, 0.2); }
+
+        .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+
+        /* Typography */
+        .val-title { font-size: 0.6rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 4px; }
+        .val-number { font-size: 2rem; font-weight: 900; }
+
+        /* Tables */
+        .admin-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        .admin-table th { 
+            text-align: left; padding: 16px; color: var(--text-muted); 
+            border-bottom: 1px solid var(--border-subtle); text-transform: uppercase; 
+            font-size: 0.65rem; letter-spacing: 0.1em; font-weight: 900;
+            background: var(--bg-surface);
+        }
+        .admin-table td { padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.02); }
+        .admin-table tr { transition: background 0.2s; }
+        .admin-table tr:hover td { background-color: rgba(255,255,255,0.03); }
+
+        .pill-status { padding: 4px 8px; border-radius: 4px; font-size: 0.6rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; }
+        .pill-success { background: rgba(16, 185, 129, 0.1); color: var(--success-accent); }
+        .pill-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger-accent); }
+
+        /* Loader */
+        .loader { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.1); border-radius: 50%; border-top-color: var(--primary-accent); animation: spin 1s ease-in-out infinite; }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-dot"></div>
+            <h1 style="font-size: 0.95rem; text-transform: uppercase; font-weight: 900; letter-spacing: -0.02em;">God<span class="text-accent">Mode</span></h1>
+        </div>
+        
+        <div class="user-pill">
+            <div class="avatar"><i class="ph-bold ph-alien"></i></div>
+            <div style="flex: 1; overflow: hidden;">
+                <span style="display:block;">Super Administrador</span>
+                <span class="sub">Acesso Irrestrito</span>
+            </div>
+        </div>
+        
+        <div class="nav-menu">
+            <div class="nav-label">Plataforma (Radar)</div>
+            <a class="nav-item active" onclick="switchTab('global')">
+                <div class="nav-item-content"><i class="ph-bold ph-radar" style="font-size: 1.2rem;"></i> Visão Global</div>
+            </a>
+            <a class="nav-item" onclick="switchTab('logs')">
+                <div class="nav-item-content"><i class="ph-bold ph-terminal-window" style="font-size: 1.2rem;"></i> Logs Firehose</div>
+            </a>
+
+            <div class="nav-label">Escala B2B</div>
+            <a class="nav-item" onclick="switchTab('clients')">
+                <div class="nav-item-content"><i class="ph-bold ph-users" style="font-size: 1.2rem;"></i> Gestão de Clientes</div>
+                <span class="badge-count" id="countClients">0</span>
+            </a>
+            <a class="nav-item" onclick="switchTab('domains')">
+                <div class="nav-item-content"><i class="ph-bold ph-globe-hemisphere-west" style="font-size: 1.2rem;"></i> Redes / Domínios</div>
+                <span class="badge-count" id="countDomains" style="background: rgba(255,255,255,0.1); color: var(--text-muted);">0</span>
+            </a>
+
+            <div class="nav-label text-danger">Segurança e Defesa</div>
+            <a class="nav-item danger" onclick="switchTab('monitoring')">
+                <div class="nav-item-content"><i class="ph-bold ph-shield-warning" style="font-size: 1.2rem;"></i> Monitor WAF Ativo</div>
+            </a>
+
+            <div class="nav-label">Sistema</div>
+            <a href="login.html" class="nav-item" style="margin-top: 10px; border: 1px solid rgba(255,255,255,0.05); text-align: center; justify-content: center; color: var(--text-muted);">
+                <i class="ph-bold ph-power text-danger" style="margin-right: 8px;"></i> Desligar Painel
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-wrapper">
+        <div class="topbar">
+            <h2 id="pageTitle" style="font-size: 1.1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; background: -webkit-linear-gradient(0deg, #fff, #64748b); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Visão Global</h2>
+            <button class="btn-panic" onclick="alert('Cortando APIs... Implementação pendente')">
+                <i class="ph-bold ph-lock-key"></i> PANIC BUTTON (Cortar APIs)
+            </button>
+        </div>
+
+        <div class="content">
+
+            <!-- TAB: GLOBAL -->
+            <div id="tab-global" class="tab-content active" style="max-width: 1200px; margin: 0 auto;">
+                <div class="grid-5 mb-6 text-center">
+                    <div class="glass-card highlight" style="padding: 16px;">
+                        <p class="val-title text-accent">MRR Projetado</p>
+                        <h3 class="val-number" id="vMrr">R$ 0,00</h3>
+                    </div>
+                    <div class="glass-card" style="padding: 16px;">
+                        <p class="val-title" style="color: var(--primary-accent);">Clientes B2B</p>
+                        <h3 class="val-number text-main" id="vClients">0</h3>
+                    </div>
+                    <div class="glass-card" style="padding: 16px;">
+                        <p class="val-title" style="color: var(--text-muted);">Domínios WAF</p>
+                        <h3 class="val-number text-main" id="vDomains">0</h3>
+                    </div>
+                    <div class="glass-card" style="padding: 16px;">
+                        <p class="val-title" style="color: var(--text-muted);">Logs Gerados</p>
+                        <h3 class="val-number text-main" id="vLogs">0</h3>
+                    </div>
+                    <div class="glass-card" style="padding: 16px; border-color: rgba(239, 68, 68, 0.2); background: linear-gradient(135deg, rgba(239, 68, 68, 0.05), transparent);">
+                        <p class="val-title text-danger">Bloqueios C.D.N</p>
+                        <h3 class="val-number text-danger" id="vBlocked">0</h3>
+                    </div>
+                </div>
+
+                <div class="glass-card" style="height: 300px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                    <i class="ph-bold ph-chart-line-up" style="font-size: 8rem; color: rgba(255,255,255,0.02); position: absolute;"></i>
+                    <p style="text-transform: uppercase; font-weight: 800; letter-spacing: 0.1em; color: var(--text-muted); z-index: 2;">Aguardando Gráfico ApexCharts / Tráfego 14 Dias</p>
+                </div>
+            </div>
+
+            <!-- TAB: GESTÃO DE CLIENTES -->
+            <div id="tab-clients" class="tab-content" style="max-width: 1200px; margin: 0 auto;">
+                <h2 style="font-size: 1.5rem; margin-bottom: 4px;">Locatários B2B</h2>
+                <p style="font-family: var(--font-mono); font-size: 0.75rem; margin-bottom: 24px;">Carteira de Clientes Ativos do SaaS</p>
+
+                <div class="glass-card" style="padding: 0; overflow: hidden;">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Client ID</th>
+                                <th>Credencial</th>
+                                <th>Domínios Registrados</th>
+                                <th>Ação Administrativa</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableClients">
+                            <tr><td colspan="4" style="text-align:center;"><div class="loader"></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB: DOMÍNIOS -->
+            <div id="tab-domains" class="tab-content" style="max-width: 1200px; margin: 0 auto;">
+                <h2 style="font-size: 1.5rem; margin-bottom: 4px;">Gerenciador de Edge Nodes</h2>
+                <p style="font-family: var(--font-mono); font-size: 0.75rem; margin-bottom: 24px;">Todos os domínios roteando IPs pela C.D.N.</p>
+
+                <div class="glass-card" style="padding: 0; overflow: hidden;">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Domínio/Host</th>
+                                <th>Client ID Proprietário</th>
+                                <th>Status WAF</th>
+                                <th>Força IA</th>
+                                <th>Ação Restritiva</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableDomains">
+                            <tr><td colspan="5" style="text-align:center;"><div class="loader"></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB: LOGS FIREHOSE -->
+            <div id="tab-logs" class="tab-content" style="max-width: 1200px; margin: 0 auto;">
+                <h2 style="font-size: 1.5rem; margin-bottom: 24px;">Firehose / Master Trail de Logs</h2>
+                <div class="glass-card" style="padding: 0; overflow: hidden;">
+                    <table class="admin-table" style="font-family: var(--font-mono); font-size: 0.7rem;">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Host / Domínio</th>
+                                <th>Ação / Idade</th>
+                                <th>IP (Camuflado)</th>
+                                <th>Criptografia SHA-256 (Master)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableFirehose">
+                            <tr><td colspan="5" style="text-align:center;"><div class="loader"></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB: WAF -->
+            <div id="tab-monitoring" class="tab-content" style="max-width: 800px; margin: 0 auto;">
+                <div class="glass-card" style="text-align: center; border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.05);">
+                    <i class="ph-bold ph-radar text-danger" style="font-size: 4rem; margin-bottom: 16px;"></i>
+                    <h2 style="font-size: 1.5rem; margin-bottom: 8px;">Monitoramento WAF Ativo</h2>
+                    <p style="font-size: 0.8rem;">Filtragem L7 e detecção de anomalias na borda (Bot Mitigation/Scraping).</p>
+                </div>
+                
+                <h3 style="font-size: 1rem; margin-bottom: 16px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">Últimas Anomalias Mitigadas</h3>
+                <div id="wafLogs">
+                    <div style="background: rgba(239, 68, 68, 0.1); border-left: 4px solid var(--danger-accent); padding: 16px; border-radius: 8px; margin-bottom: 12px;">
+                        <p style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px;">2026-03-22 14:02 UTC - IP 185.22.***.***</p>
+                        <h4 style="font-size: 0.9rem; margin-bottom: 4px;">Alvo: global-xxx.com</h4>
+                        <p style="font-size: 0.75rem; color: var(--danger-accent);">Rule Triggered: Bypass F12 Tentativas excessivas sem Biometria.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // === BARREIRA ROOT (GOD MODE) ===
+        const savedPass = sessionStorage.getItem('f18_god_mode');
+        if (savedPass !== 'admin123!!') {
+            const user = prompt("SaaS GOD MODE - Digite o Usuário Admin:");
+            const pass = prompt("SaaS GOD MODE - Digite a Senha Root:");
+            if (user === 'admin@front18.com' && pass === 'admin123!!') {
+                sessionStorage.setItem('f18_god_mode', pass);
+            } else {
+                alert("Acesso Negado.");
+                window.location.href = 'index.html';
+            }
+        }
+
+        const titles = {
+            'global': 'Visão Global', 'logs': 'Firehose / Master Logs', 
+            'clients': 'Locatários B2B', 'domains': 'Gerenciador Edge', 'monitoring': 'Anomalias L7'
+        };
+
+        function switchTab(id) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById('tab-' + id).classList.add('active');
+            let trigger = Array.from(document.querySelectorAll('.nav-item')).find(x => x.getAttribute('onclick').includes(id));
+            if(trigger) trigger.classList.add('active');
+
+            document.getElementById('pageTitle').innerText = titles[id];
+        }
+
+        // Fetch Data Render from REAL Server APIs
+        async function fetchAdminData() {
+            try {
+                const cb = '?cb=' + new Date().getTime();
+                // 1. CARREGA MÉTRICAS MACRO
+                let resM = await fetch('/api/admin/metrics' + cb, { cache: 'no-store' });
+                let metrics = await resM.json();
+                
+                document.getElementById('vMrr').innerText = `R$ ${parseFloat(metrics.mrr_projetado || 0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+                document.getElementById('vClients').innerText = metrics.clientes_ativos || 0;
+                document.getElementById('vDomains').innerText = metrics.dominios_waf || 0;
+                document.getElementById('vLogs').innerText = metrics.logs_gerados || 0;
+                document.getElementById('vBlocked').innerText = metrics.bloqueios_l7 || 0;
+                
+                document.getElementById('countClients').innerText = metrics.clientes_ativos || 0;
+                document.getElementById('countDomains').innerText = metrics.dominios_waf || 0;
+
+                // 2. CARREGA GESTÃO DE CLIENTES
+                let resC = await fetch('/api/admin/clients' + cb, { cache: 'no-store' });
+                let clients = await resC.json();
+                let htmlClients = '';
+                clients.forEach(c => {
+                    let st = c.status === 'ativo' ? `<span class="pill-status pill-success">Ativo</span>` : `<span class="pill-status pill-danger">Desativado</span>`;
+                    htmlClients += `<tr>
+                        <td style="font-family: var(--font-mono); color: var(--primary-accent);">${c.id}</td>
+                        <td><strong>${c.email}</strong><br><span style="font-size: 0.65rem; color:var(--text-muted);">Plano: ${c.plano_nome}</span></td>
+                        <td>${c.dominios_count} Domínios</td>
+                        <td>${st}</td>
+                    </tr>`;
+                });
+                document.getElementById('tableClients').innerHTML = htmlClients || '<tr><td colspan="4">Nenhum cliente gerado.</td></tr>';
+
+                // 3. CARREGA ROTEAMENTO (DOMAINS)
+                let resD = await fetch('/api/admin/domains' + cb, { cache: 'no-store' });
+                let domains = await resD.json();
+                let htmlDomains = '';
+                domains.forEach(d => {
+                    htmlDomains += `<tr>
+                        <td><strong>${d.nome_dominio}</strong></td>
+                        <td style="font-family: var(--font-mono); color: var(--text-muted);">${d.client_id}</td>
+                        <td><span class="pill-status pill-success">Traffic ON</span></td>
+                        <td>Level ${d.nivel_protecao || 'Padrão'}</td>
+                        <td><button class="btn-panic" style="font-size: 0.5rem; padding: 4px 8px;">Isolar Node</button></td>
+                    </tr>`;
+                });
+                document.getElementById('tableDomains').innerHTML = htmlDomains || '<tr><td colspan="5">Sem domínios pendentes.</td></tr>';
+
+                // 4. CARREGA FIREHOSE TRAIL EXATAMENTE como antes, buscando os logs puros da API de Admin
+                let resS = await fetch('/api/admin/logs' + cb, { cache: 'no-store' });
+                let logs = await resS.json();
+                let htmlFirehose = '';
+                logs.forEach(l => {
+                    let st = l.aprovado ? `<span class="text-success">OK / ${l.idade_estimada} anos</span>` : `<span class="text-danger">BLOCKED / IA Fail</span>`;
+                    htmlFirehose += `<tr>
+                        <td>${new Date(l.data_hora).toISOString().split('T')[0]}</td>
+                        <td>${l.host_site || 'N/A'}</td>
+                        <td>${st}</td>
+                        <td>${l.ip_mascarado || l.ip_usuario || 'Hidden'}</td>
+                        <td style="color:#64748b; max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${l.hash_atual || 'Pendente'}</td>
+                    </tr>`;
+                });
+                document.getElementById('tableFirehose').innerHTML = htmlFirehose || '<tr><td colspan="5">Sem logs.</td></tr>';
+
+            } catch(e) {
+                console.error("Erro Admin APIs Reais", e);
+            }
+        }
+
+        fetchAdminData();
+    </script>
+</body>
+</html>

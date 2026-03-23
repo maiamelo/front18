@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel B2B | Front18 Safe</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Custom GoAdopt Styles -->
+    <style>
+        :root {
+            /* Tema Oficial Deep Violet & Coral */
+            --bg-canvas: #190C3A;
+            --bg-surface: #2D0F65;
+            --bg-surface-hover: #3b1c7a;
+            --primary-accent: #EA5944;
+            --primary-hover: #FD8972;
+            --text-main: #EFF3F4;
+            --text-muted: rgba(239, 243, 244, 0.6);
+            --border-subtle: rgba(239, 243, 244, 0.1);
+            --shadow-glow: rgba(234, 89, 68, 0.2);
+            --font-main: 'Outfit', 'Inter', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); }
+        
+        body { 
+            background-color: var(--bg-canvas); 
+            color: var(--text-main); 
+            display: flex; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
+
+        /* Títulos */
+        h1, h2, h3 { font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
+        p { font-weight: 400; line-height: 1.6; color: var(--text-muted); }
+
+        /* Utilitarios */
+        .text-accent { color: var(--primary-accent); }
+        .bg-surface { background-color: var(--bg-surface); }
+        .border-subtle { border: 1px solid var(--border-subtle); }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background-color: var(--bg-surface);
+            border-right: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            z-index: 20;
+        }
+
+        .brand {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 1.2rem;
+        }
+
+        .user-pill {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .user-pill .avatar {
+            width: 32px; height: 32px;
+            background-color: rgba(0, 221, 128, 0.1);
+            border: 1px solid var(--primary-accent);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--primary-accent);
+        }
+        .user-pill span { font-size: 0.85rem; font-weight: 700; }
+
+        .nav-menu { flex: 1; padding: 16px 12px; overflow-y: auto; }
+        .nav-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin: 16px 0 8px 12px; font-weight: 700; }
+
+        .nav-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 12px; border-radius: 8px;
+            color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 500;
+            transition: all 0.2s; border-left: 2px solid transparent; margin-bottom: 4px; border: 1px solid transparent;
+            cursor: pointer;
+        }
+        .nav-item:hover { background-color: rgba(255,255,255,0.03); color: var(--text-main); }
+        .nav-item.active {
+            background-color: rgba(0, 221, 128, 0.05);
+            color: var(--primary-accent);
+            border: 1px solid rgba(0,221,128,0.2);
+        }
+
+        /* Main Content */
+        .main-wrapper { flex: 1; display: flex; flex-direction: column; position: relative; }
+        
+        .topbar {
+            height: 70px;
+            background-color: rgba(11, 14, 17, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 40px;
+        }
+
+        .content { flex: 1; overflow-y: auto; padding: 40px; }
+
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* UI Elements */
+        .glass-card {
+            background-color: var(--bg-surface);
+            border-radius: 16px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-accent);
+            color: #000; font-size: 0.9rem; font-weight: 700;
+            padding: 12px 24px; border: none; border-radius: 8px;
+            cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px var(--shadow-glow); }
+
+        .btn-secondary {
+            background-color: transparent; border: 1px solid var(--border-subtle);
+            color: var(--text-main); font-size: 0.9rem; font-weight: 700;
+            padding: 12px 24px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;
+        }
+        .btn-secondary:hover { background-color: rgba(255,255,255,0.05); }
+
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+
+        /* Forms */
+        .input-group label { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; }
+        .input-group input, .input-group select {
+            width: 100%; padding: 12px 16px;
+            background-color: rgba(0,0,0,0.2); border: 1px solid var(--border-subtle);
+            border-radius: 8px; color: var(--text-main); font-size: 0.9rem;
+        }
+        .input-group input:focus, .input-group select:focus { outline: none; border-color: var(--primary-accent); }
+
+        table { width: 100%; border-collapse: collapse; font-family: monospace; font-size: 0.85rem; }
+        th { text-align: left; padding: 12px; color: var(--text-muted); border-bottom: 1px solid var(--border-subtle); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; }
+        td { padding: 16px 12px; border-bottom: 1px solid rgba(255,255,255,0.02); }
+        tr:hover td { background-color: rgba(255,255,255,0.02); }
+        
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        .badge-success { background: rgba(0, 221, 128, 0.1); color: var(--primary-accent); border: 1px solid rgba(0,221,128,0.2); }
+        .badge-danger { background: rgba(255, 68, 68, 0.1); color: #FF4444; border: 1px solid rgba(255,68,68,0.2); }
+
+        /* Snippet */
+        pre { background: #000; padding: 16px; border-radius: 8px; border: 1px solid var(--border-subtle); font-size: 0.8rem; overflow-x: auto; color: #a9b7c6; }
+        code { font-family: 'JetBrains Mono', monospace; }
+
+        /* Loader */
+        .loader { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.1); border-radius: 50%; border-top-color: var(--primary-accent); animation: spin 1s ease-in-out infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="brand">
+            <h1 style="font-size: 1.2rem;">Front<span class="text-accent">18</span></h1>
+        </div>
+        
+        <div class="user-pill">
+            <div class="avatar"><i class="ph-bold ph-buildings"></i></div>
+            <div style="flex: 1; overflow: hidden;">
+                <span id="uiUserEmail" style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">carregando...</span>
+                <span class="text-accent" style="font-size: 0.65rem; text-transform: uppercase;">Plano Starter</span>
+            </div>
+        </div>
+        
+        <div class="nav-menu">
+            <div class="nav-label">Diligência Legal</div>
+            <a class="nav-item active" onclick="switchTab('home')">
+                <i class="ph-bold ph-squares-four" style="font-size: 1.2rem;"></i> Visão Geral
+            </a>
+            <a class="nav-item" onclick="switchTab('logs')">
+                <i class="ph-bold ph-list-dashes" style="font-size: 1.2rem;"></i> Logs Auditáveis
+            </a>
+            <a class="nav-item" onclick="switchTab('reports')">
+                <i class="ph-bold ph-file-pdf text-accent" style="font-size: 1.2rem;"></i> Dossiê Jurídico
+            </a>
+
+            <div class="nav-label">Controle & Infra</div>
+            <a class="nav-item" onclick="switchTab('domains')">
+                <i class="ph-bold ph-globe" style="font-size: 1.2rem;"></i> Meus Domínios
+            </a>
+            <a class="nav-item" onclick="switchTab('settings')">
+                <i class="ph-bold ph-sliders-horizontal" style="font-size: 1.2rem;"></i> Setup de IA
+            </a>
+            <a class="nav-item" onclick="switchTab('api')">
+                <i class="ph-bold ph-code" style="font-size: 1.2rem;"></i> Integração B2B
+            </a>
+
+            <div class="nav-label">Financeiro</div>
+            <a class="nav-item" onclick="switchTab('planos')">
+                <i class="ph-bold ph-credit-card" style="font-size: 1.2rem;"></i> Faturamento & Planos
+            </a>
+
+            <div class="nav-label" style="margin-top:20px;">Sessão</div>
+            <a href="login.html" class="nav-item" onclick="logout()">
+                <i class="ph-bold ph-sign-out" style="font-size: 1.2rem;"></i> Sair da Conta
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-wrapper">
+        <div class="topbar">
+            <h2 id="pageTitle" style="font-size: 1.1rem; font-weight: 700;">Visão Geral</h2>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span class="badge badge-success"><i class="ph-bold ph-check" style="margin-right:4px;"></i> Sistema Online</span>
+            </div>
+        </div>
+
+        <div class="content">
+
+            <!-- TAB: VISÃO GERAL (HOME) -->
+            <div id="tab-home" class="tab-content active">
+                <div class="grid-3">
+                    <div class="glass-card" style="border-top: 2px solid var(--primary-accent);">
+                        <p>Total de Hits (Mês)</p>
+                        <h3 style="font-size: 2.5rem; margin-top: 10px;" id="statTotal">--</h3>
+                    </div>
+                    <div class="glass-card border-subtle">
+                        <p>Acessos Legítimos (+18)</p>
+                        <h3 style="font-size: 2.5rem; margin-top: 10px; color: var(--primary-accent);" id="statOk">--</h3>
+                    </div>
+                    <div class="glass-card border-subtle">
+                        <p>Bloqueios e Anomalias</p>
+                        <h3 style="font-size: 2.5rem; margin-top: 10px; color: #FF4444;" id="statBlocked">--</h3>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 20px; text-transform: uppercase; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;">Monitoramento Remoto</h3>
+               <div class="glass-card" style="padding: 0; overflow: hidden;">
+                    <table id="tableHomeLogs">
+                        <thead style="background: rgba(0,0,0,0.2);">
+                            <tr>
+                                <th>Data/Hora</th>
+                                <th>Status</th>
+                                <th>IP Origem (LGPD)</th>
+                                <th>Client_ID</th>
+                            </tr>
+                        </thead>
+                        <tbody><tr><td colspan="4" style="text-align:center;"><div class="loader"></div></td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB: MEUS DOMÍNIOS -->
+            <div id="tab-domains" class="tab-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <h2 style="font-size: 1.5rem;">Domínios Autorizados</h2>
+                    <button class="btn-primary" onclick="alert('Funcionalidade de Multi-Domínio Automático via Gatilho JS está ativa. Basta injetar a TAG em um novo domínio.')"><i class="ph-bold ph-plus"></i> Novo Domínio</button>
+                </div>
+
+                <div class="grid-2" id="domainsGrid">
+                    <!-- Javascript Vai Injetar os Domínios Aqui -->
+                    <div class="glass-card" style="text-align: center;"><div class="loader"></div></div>
+                </div>
+            </div>
+
+            <!-- TAB: CONFIG SETTINGS -->
+            <div id="tab-settings" class="tab-content">
+                <h2 style="font-size: 1.5rem; margin-bottom: 8px;">Força da Validação Automática</h2>
+                <p style="margin-bottom: 32px;">Altere a capacidade e o nível de biometria exigidos para o usuário romper a barreira do Front18. Afeta todos os Domínios.</p>
+
+                <div class="glass-card" id="settingsContainer">
+                    <p style="margin-bottom: 20px;">Você possuí os seguintes domínios operacionais sendo atualizados em tempo real:</p>
+                    <div id="settingsDomains" class="grid-2">
+                        <!-- Gerado -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: DOSSIE EXPORT -->
+            <div id="tab-reports" class="tab-content" style="max-width: 600px; margin: 0 auto;">
+                <div style="text-align: center; margin-bottom: 32px;">
+                    <div style="width: 70px; height: 70px; border-radius: 50%; background: rgba(0,221,128,0.1); border: 2px solid var(--primary-accent); color: var(--primary-accent); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 16px;">
+                        <i class="ph-fill ph-file-pdf"></i>
+                    </div>
+                    <h2 style="font-size: 2rem;">Laudo LGPD Completo</h2>
+                    <p>Baixe a cadeia de Hash Criptográfica para provar obediência legal.</p>
+                </div>
+
+                <div class="glass-card">
+                    <div class="input-group" style="margin-bottom: 20px;">
+                        <label>Selecione o Domínio Alvo</label>
+                        <select id="selectDossieDomain">
+                            <!-- JS -->
+                        </select>
+                    </div>
+                    
+                    <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="downloadDossie()">
+                        <i class="ph-bold ph-download-simple"></i> Emitir Dossiê Forense PDF (HTML)
+                    </button>
+                </div>
+            </div>
+
+            <!-- TAB: INTEGRACAO -->
+            <div id="tab-api" class="tab-content" style="max-width: 1000px;">
+                <h2 style="font-size: 1.5rem; margin-bottom: 8px;">Instalação e Integrações</h2>
+                <p style="margin-bottom: 24px;">Veja como adicionar o Front18 no seu sistema em menos de 1 minuto e garantir que o rastreamento C.D.N atue em escala.</p>
+                
+                <div class="glass-card" style="border-top: 2px solid var(--primary-accent); margin-bottom: 32px;">
+                    <div class="input-group" style="margin-bottom: 16px;">
+                        <label style="color: var(--primary-accent);"><i class="ph-bold ph-key"></i> Global API KEY (Sua Credencial Privada)</label>
+                        <input type="text" readonly id="myGlobalApiKey" value="carregando..." style="font-family: monospace; font-size: 1.1rem; color: var(--primary-accent); background: rgba(0, 221, 128, 0.05); text-align: center; border-color: rgba(0, 221, 128, 0.3);">
+                    </div>
+                    <div style="position: relative; margin-top: 16px;">
+                        <pre><code id="snippetCode">&lt;!-- Front18 B2B Shield Global --&gt;
+&lt;script src=&quot;https://front18.b20robots.com.br/js/front18-injector.js&quot;
+        data-client=&quot;<span id="snippetKey" class="text-accent">KEY</span>&quot; async&gt;&lt;/script&gt;</code></pre>
+                        <button onclick="copiarSnippet()" class="btn-primary" style="position: absolute; top: 10px; right: 10px; padding: 4px 12px; font-size: 0.8rem;"><i class="ph-bold ph-copy"></i> Copiar Código</button>
+                    </div>
+
+                    <script>
+                    function copiarSnippet() {
+                        var codigo = document.getElementById('snippetCode').innerText;
+                        navigator.clipboard.writeText(codigo).then(function() {
+                            alert("Snippet Copiado com Sucesso! Cole no <head> do seu site.");
+                        }).catch(function() {
+                            alert("Falha ao copiar. Tente selecionar o texto.");
+                        });
+                    }
+                    </script>
+                </div>
+
+                <h3 style="margin-bottom: 16px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">Como instalar nos principais sistemas:</h3>
+                
+                <div class="grid-2" style="margin-top: 16px;">
+                    <!-- WordPress / WooCommerce -->
+                    <div class="glass-card" style="padding: 20px;">
+                        <div style="display:flex; align-items:center; gap: 12px; margin-bottom: 12px;">
+                            <i class="ph-fill ph-wordpress-logo" style="font-size: 2rem; color: #0073AA;"></i>
+                            <h4 style="font-size:1.1rem; color: #fff;">WordPress / Woo</h4>
+                        </div>
+                        <p style="font-size:0.8rem; margin-bottom:12px;">No arquivo <strong>header.php</strong> (do seu child-theme) ou via plugin "WP Headers".</p>
+                        <pre style="padding: 10px; font-size: 0.7rem;"><code>&lt;head&gt;
+    &lt;!-- Outros scripts do WP --&gt;
+<span style="color:var(--primary-accent);">&lt;!-- Cole o Front18 Shield AQUI --&gt;</span>
+    &lt;script src="...front18-injector..."&gt;&lt;/script&gt;
+&lt;/head&gt;</code></pre>
+                    </div>
+
+                    <!-- Nuvemshop -->
+                    <div class="glass-card" style="padding: 20px;">
+                        <div style="display:flex; align-items:center; gap: 12px; margin-bottom: 12px;">
+                            <i class="ph-fill ph-shopping-bag" style="font-size: 2rem; color: #2D3A82;"></i>
+                            <h4 style="font-size:1.1rem; color: #fff;">Nuvemshop</h4>
+                        </div>
+                        <p style="font-size:0.8rem; margin-bottom:12px;">No painel web, navegue até <strong>Configurações > Códigos Avançados</strong>.</p>
+                        <pre style="padding: 10px; font-size: 0.7rem;"><code>&lt;!-- Painel Nuvemshop: Rastreamento Cabeçalho --&gt;
+<span style="color:var(--primary-accent);">&lt;!-- Cole exatamente o código copiado --&gt;</span>
+&lt;script src="...front18-injector...js"
+        data-client-id="SUA-CHAVE"
+        defer&gt;&lt;/script&gt;</code></pre>
+                    </div>
+
+                    <!-- Shopify -->
+                    <div class="glass-card" style="padding: 20px;">
+                        <div style="display:flex; align-items:center; gap: 12px; margin-bottom: 12px;">
+                            <i class="ph-fill ph-app-store-logo" style="font-size: 2rem; color: #95BF47;"></i>
+                            <h4 style="font-size:1.1rem; color: #fff;">Shopify</h4>
+                        </div>
+                        <p style="font-size:0.8rem; margin-bottom:12px;">Edite sua Loja Virtual. Abra o arquivo central <strong>theme.liquid</strong>.</p>
+                        <pre style="padding: 10px; font-size: 0.7rem;"><code>&lt;!doctype html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        {{ content_for_header }}
+<span style="color:var(--primary-accent);">&lt;!-- Front18 imediatamente antes de fechar head --&gt;</span>
+        &lt;script src="..." defer&gt;&lt;/script&gt;
+    &lt;/head&gt;</code></pre>
+                    </div>
+
+                    <!-- Yampi -->
+                    <div class="glass-card" style="padding: 20px;">
+                        <div style="display:flex; align-items:center; gap: 12px; margin-bottom: 12px;">
+                            <i class="ph-fill ph-shopping-cart" style="font-size: 2rem; color: #7B50CE;"></i>
+                            <h4 style="font-size:1.1rem; color: #fff;">Yampi / Checkout</h4>
+                        </div>
+                        <p style="font-size:0.8rem; margin-bottom:12px;">Na área de desenvolvedor, vá em <strong>Scripts e Pixels</strong>.</p>
+                        <pre style="padding: 10px; font-size: 0.7rem;"><code>// Nova Tag Customizada (Local: Head/Top)
+nome: Proteção Front18 Safe WAF
+
+<span style="color:var(--primary-accent);">&lt;!-- Tag B2B sem alterações --&gt;</span>
+&lt;script src="..." defer&gt;&lt;/script&gt;</code></pre>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- TAB: LOGS LISTA -->
+            <div id="tab-logs" class="tab-content">
+                <h2 style="font-size: 1.5rem; margin-bottom: 24px;">Cadeia Auditável (Logs)</h2>
+                <div class="glass-card" style="padding: 0; overflow: hidden;">
+                    <table id="tableFullLogs">
+                        <thead style="background: rgba(0,0,0,0.2);">
+                            <tr>
+                                <th>Token UID</th>
+                                <th>Idade/IA</th>
+                                <th>Decisão Final</th>
+                                <th>Data UTC</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+
+            <!-- TAB: PLANOS -->
+            <div id="tab-planos" class="tab-content" style="max-width: 900px;">
+                <h2 style="font-size: 1.5rem; margin-bottom: 8px;">Upgrade de Capacidade</h2>
+                <p style="margin-bottom: 32px;">O seu plano atual cobre uma quantidade específica de processamento neural mensal. Migre para não travar suas contas.</p>
+                
+                <div class="grid-2" id="clientPlanGrid">
+                    <!-- Dinâmico API /api/plans -->
+                    <div class="glass-card" style="padding:40px; text-align:center;">
+                        <div class="spinner"></div> Carregando...
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        const clientId = localStorage.getItem('f18_client_id');
+        const userEmail = localStorage.getItem('f18_session');
+        
+        if (!clientId) { window.location.href = 'login.html'; }
+
+        document.getElementById('uiUserEmail').innerText = userEmail;
+        document.getElementById('myGlobalApiKey').value = clientId;
+        document.getElementById('snippetKey').innerText = clientId;
+
+        const titles = {
+            'home': 'Visão Geral Automática', 'logs': 'Cadeia de Logs Seguros', 'reports': 'Exportar Imutabilidade (Justiça)',
+            'domains': 'Meus Servidores Protegidos', 'settings': 'Força Neural Biométrica', 'api': 'Implementação SaaS', 'planos': 'Planos e Custo Operacional'
+        };
+
+        function switchTab(id) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById('tab-' + id).classList.add('active');
+            let trigger = Array.from(document.querySelectorAll('.nav-item')).find(x => x.getAttribute('onclick').includes(id));
+            if(trigger) trigger.classList.add('active');
+
+            document.getElementById('pageTitle').innerText = titles[id];
+        }
+
+        function logout() {
+            localStorage.clear();
+        }
+
+        // CARREGA ESTATÍSTICAS NATIVAS E LOGS SERVER-SIDE
+        async function fetchDashboard() {
+            try {
+                // Req 1: Domains
+                let resD = await fetch('/api/domains?client_id=' + clientId);
+                let dataD = await resD.json();
+                if(dataD.domains) { renderDomains(dataD.domains); renderSettings(dataD.domains); renderDossie(dataD.domains); }
+                
+                // Req 2: Stats Global
+                let resS = await fetch('/api/stats?client_id=' + clientId);
+                let logs = await resS.json(); // logs passados
+                let total = logs.length;
+                let ok = logs.filter(l => l.aprovado).length;
+                
+                document.getElementById('statTotal').innerText = total;
+                document.getElementById('statOk').innerText = ok;
+                document.getElementById('statBlocked').innerText = (total - ok);
+
+                // Req 3: Planos e Faturamento B2B
+                try {
+                    let resP = await fetch('/api/plans');
+                    let pData = await resP.json();
+                    let pGrid = document.getElementById('clientPlanGrid');
+                    pGrid.innerHTML = '';
+                    pData.forEach(p => {
+                        const price = parseFloat(p.preco) > 0 ? parseFloat(p.preco).toFixed(0) : '0';
+                        const limits = Number(p.limite_mensal).toLocaleString('pt-BR');
+                        pGrid.innerHTML += `
+                            <div class="glass-card" style="padding:32px; text-align:center; border-top: 3px solid var(--primary-accent);">
+                                <h3 style="font-size: 1.5rem; margin-bottom: 8px;">${p.nome}</h3>
+                                <div style="font-size: 2.2rem; font-weight:800; font-family: var(--font-display); margin-bottom: 24px; color: #fff;">
+                                    R$ ${price}<span style="font-size: 0.9rem; color: var(--text-secondary); font-weight:400;">/mês</span>
+                                </div>
+                                <p style="font-size:0.9rem; margin-bottom: 24px; color: var(--text-secondary);">
+                                    Permite até <strong>${limits}</strong> Validações Biométricas via Edge Node C.D.N
+                                </p>
+                                <button class="btn btn-primary" style="width:100%;" onclick="escolherPlano(${p.id})">${price === '0' ? 'Plano Grátis' : 'Selecionar Plano'}</button>
+                            </div>
+                        `;
+                    });
+                } catch(e) { console.error('Erro nos planos'); }
+
+                // Popular Tabelas
+                let htmlHome = '';
+                let htmlFull = '';
+                logs.forEach((l, i) => {
+                    let badge = l.aprovado ? `<span class="badge badge-success">OK / Liberado</span>` : `<span class="badge badge-danger">Bloqueio</span>`;
+                    let ipMask = l.host_site || 'Direto';
+                    
+                    if(i < 5) {
+                        htmlHome += `<tr><td>Há instantes</td><td>${badge}</td><td>${ipMask}</td><td>${l.client_id}</td></tr>`;
+                    }
+                    htmlFull += `<tr>
+                        <td style="color:#666">...${l.client_id.substring(l.client_id.length-8)}</td>
+                        <td><span style="color:var(--primary-accent); font-weight:bold;">${l.idade_estimada} anos</span> (IA)</td>
+                        <td>${badge}</td>
+                        <td>${new Date(l.data_hora).toLocaleString()}</td>
+                    </tr>`;
+                });
+                
+                if(logs.length === 0) { htmlHome = '<tr><td colspan="4">Vazio. Sem dados.</td></tr>'; }
+                document.querySelector('#tableHomeLogs tbody').innerHTML = htmlHome;
+                document.querySelector('#tableFullLogs tbody').innerHTML = htmlFull;
+
+            } catch(e) { console.log("Erro ao ligar backend", e); }
+        }
+
+        function renderDomains(doms) {
+            let container = document.getElementById('domainsGrid');
+            if(doms.length === 0) { container.innerHTML = '<div class="glass-card"><p>Nenhum domínio interceptado.</p></div>'; return; }
+            let html = '';
+            doms.forEach(d => {
+                html += `
+                <div class="glass-card" style="border-top: 2px solid var(--primary-accent); position: relative;">
+                    <span class="badge badge-success" style="position: absolute; right: 24px; top: 24px;">Ativo</span>
+                    <p style="font-size:0.75rem; text-transform:uppercase; font-weight:bold; margin-bottom: 4px;">HOST</p>
+                    <h4 style="font-size:1.2rem; margin-bottom: 16px; color: var(--text-main);">${d.nome_dominio}</h4>
+                    <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.75rem;">
+                        <span style="color:var(--text-muted)">API KEY DEDICADA:</span><br>
+                        <span class="text-accent">${d.api_key}</span>
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderSettings(doms) {
+            let container = document.getElementById('settingsDomains');
+            if(doms.length === 0) { container.innerHTML = '<p>Nada aqui.</p>'; return; }
+            let html = '';
+            doms.forEach(d => {
+                html += `
+                <div class="glass-card" style="padding: 16px;">
+                    <p style="font-weight:bold; margin-bottom: 12px;">${d.nome_dominio}</p>
+                    <div class="input-group">
+                        <label>Força da Punição e Biometria Front18</label>
+                        <select id="selSet_${d.id}">
+                            <option value="low" ${d.nivel_protecao==='low'?'selected':''}>Nível Baixo (Rosto Firme)</option>
+                            <option value="medium" ${d.nivel_protecao==='medium'?'selected':''}>Nível Médio (Movimento Lateral)</option>
+                            <option value="high" ${d.nivel_protecao==='high'?'selected':''}>Nível Alto Hacker (Boca + Rosto)</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary" style="margin-top: 16px; width: 100%; justify-content:center;" onclick="saveConfig(${d.id})">Aplicar Regra Real-Time</button>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderDossie(doms) {
+            let select = document.getElementById('selectDossieDomain');
+            select.innerHTML = '';
+            doms.forEach(d => {
+                select.innerHTML += `<option value="${d.id}">${d.nome_dominio}</option>`;
+            });
+        }
+
+        async function saveConfig(domainId) {
+            const nivel = document.getElementById('selSet_' + domainId).value;
+            await fetch('/api/settings', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ domain_id: domainId, nivel_protecao: nivel })
+            });
+            alert('WAF (Firewall Biométrico) Atualizado no servidor!');
+        }
+
+        function downloadDossie() {
+            let id = document.getElementById('selectDossieDomain').value;
+            if(!id) return alert('Selecione.');
+            window.open(`/api/dossie?domain_id=${id}`, '_blank');
+        }
+
+        async function escolherPlano(planId) {
+            if (!confirm('Deseja realmente migrar para este plano? Sua capacidade operacional mudará imediatamente.')) return;
+            try {
+                let res = await fetch('/api/choose-plan', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ client_id: clientId, plan_id: planId })
+                });
+                let json = await res.json();
+                if(json.status === 'success') {
+                    alert('Seu Plano foi atualizado com sucesso no Servidor Edge!');
+                    window.location.reload();
+                } else {
+                    alert('Erro: ' + json.message);
+                }
+            } catch(e) {
+                alert('Erro de Conexão. Tente novamente.');
+            }
+        }
+
+        fetchDashboard();
+    </script>
+</body>
+</html>

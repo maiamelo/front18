@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Content Blur — FRONT18</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            padding: 20px;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 0 28px;
+            border-bottom: 1px solid #222;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+        .logo { font-size: 22px; font-weight: 900; color: #fff; letter-spacing: -1px; }
+        .logo span { color: #E60000; }
+
+        h1 { font-size: 24px; margin-bottom: 8px; }
+        .subtitle { color: #666; margin-bottom: 28px; font-size: 14px; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 8px;
+            overflow: visible; /* importante: não clip o overlay */
+        }
+        .card-img-wrap {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px 8px 0 0;
+        }
+        .card-img-wrap img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+        .card-body { padding: 16px; }
+        .card-body h3 { font-size: 16px; margin-bottom: 6px; }
+        .card-body p  { font-size: 13px; color: #666; }
+
+        /* ─── PAINEL DE CONTROLE DO TESTE ─────────────────────── */
+        .test-panel {
+            background: #111;
+            border: 1px solid #333;
+            border-left: 3px solid #E60000;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .test-panel p { font-size: 13px; color: #aaa; flex: 1; min-width: 200px; }
+        .test-panel strong { color: #fff; }
+        .btn-reset {
+            background: #E60000;
+            color: #fff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: monospace;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+        }
+        .btn-reset:hover { background: #cc0000; }
+        .btn-gate {
+            background: transparent;
+            color: #aaa;
+            border: 1px solid #444;
+            padding: 8px 18px;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            font-family: monospace;
+            white-space: nowrap;
+        }
+        .btn-gate:hover { border-color: #E60000; color: #fff; }
+        #statusInfo {
+            font-size: 11px;
+            color: #555;
+            font-family: monospace;
+            margin-top: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER — avatar NÃO deve ser borrado (está em <header>) -->
+    <header>
+        <div class="logo">FRONT<span>18</span></div>
+        <img src="https://i.pravatar.cc/40?img=3" alt="avatar" style="border-radius:50%; width:36px; height:36px;">
+        <span style="color:#555; font-size:12px;">← avatar no header — NÃO borrado</span>
+
+        <!-- Painel de controle fica no header para ficar no topo -->
+        <div style="margin-left:auto; display:flex; gap:10px; align-items:center;">
+            <button class="btn-gate" onclick="testarGateCompleto()" title="Simula visitante novo">
+                🔒 Testar Gate Completo
+            </button>
+            <button class="btn-reset" onclick="resetarEAplicarBlur()" title="Limpa sessão e aplica blur direto">
+                🔁 Reset + Aplicar Blur
+            </button>
+        </div>
+    </header>
+
+    <!-- Painel de status -->
+    <div class="test-panel">
+        <div>
+            <p><strong>Modo:</strong> Teste de Content Blur. Clique em "Reset + Aplicar Blur" para re-borrar todas as imagens e testar o desbloqueio individual por câmera.</p>
+            <div id="statusInfo">sessionStorage: carregando...</div>
+        </div>
+    </div>
+
+    <h1>Galeria de Produtos (Conteúdo +18)</h1>
+    <p class="subtitle">Imagens abaixo serão borradas. Clique em cada uma para desblurrar via verificação facial.</p>
+    <br>
+
+    <div class="grid" id="galeria">
+        <div class="card">
+            <div class="card-img-wrap">
+                <img src="https://picsum.photos/seed/a1/400/300" alt="Produto 1">
+            </div>
+            <div class="card-body"><h3>Produto A</h3><p>Conteúdo +18 restrito</p></div>
+        </div>
+        <div class="card">
+            <div class="card-img-wrap">
+                <img src="https://picsum.photos/seed/b2/400/300" alt="Produto 2">
+            </div>
+            <div class="card-body"><h3>Produto B</h3><p>Conteúdo +18 restrito</p></div>
+        </div>
+        <div class="card">
+            <div class="card-img-wrap">
+                <img src="https://picsum.photos/seed/c3/400/300" alt="Produto 3">
+            </div>
+            <div class="card-body"><h3>Produto C</h3><p>Conteúdo +18 restrito</p></div>
+        </div>
+        <div class="card">
+            <div class="card-img-wrap">
+                <img src="https://picsum.photos/seed/d4/400/300" alt="Produto 4">
+            </div>
+            <div class="card-body"><h3>Produto D</h3><p>Conteúdo +18 restrito</p></div>
+        </div>
+        <div class="card">
+            <div class="card-img-wrap">
+                <img src="https://picsum.photos/seed/e5/400/300" alt="Produto 5">
+            </div>
+            <div class="card-body"><h3>Produto E</h3><p>Conteúdo +18 restrito</p></div>
+        </div>
+        <div class="card">
+            <div class="card-img-wrap">
+                <img src="https://picsum.photos/seed/f6/400/300" alt="Produto F">
+            </div>
+            <div class="card-body"><h3>Produto F</h3><p>Conteúdo +18 restrito</p></div>
+        </div>
+    </div>
+
+    <!-- ===================================================
+         FRONT18 INJECTOR — simula instalação no site
+         data-skip-gate="true" → pula a age gate e vai direto ao content blur
+    =================================================== -->
+    <script src="/js/front18-injector.js"
+            data-client="TEST_CLIENT_BLUR_DEMO"
+            data-skip-gate="true">
+    </script>
+
+    <script>
+        // ── FUNÇÕES DE CONTROLE DO TESTE ───────────────────────────────────
+        const SESSION_KEY = 'f18_gate_ok_TEST_CLIENT_BLUR_DEMO';
+        const UNLOCK_KEY  = 'f18_unlocked_TEST_CLIENT_BLUR_DEMO';
+
+        function atualizarStatus() {
+            const gate   = sessionStorage.getItem(SESSION_KEY);
+            const unlock = JSON.parse(sessionStorage.getItem(UNLOCK_KEY) || '[]');
+            document.getElementById('statusInfo').textContent =
+                `gate_ok: ${gate || 'null'} | desbloqueadas: ${unlock.length} imagem(ns)`;
+        }
+        atualizarStatus();
+        setInterval(atualizarStatus, 1500);
+
+        function resetarEAplicarBlur() {
+            // Limpa TUDO do sessionStorage desta sessão de teste
+            sessionStorage.removeItem(SESSION_KEY);
+            sessionStorage.removeItem(UNLOCK_KEY);
+
+            // Remove wrappers e overlays antigos para re-aplicar limpo
+            document.querySelectorAll('.f18-blur-wrapper').forEach(w => {
+                const img = w.querySelector('img');
+                if (img) {
+                    img.style.filter        = '';
+                    img.style.pointerEvents = '';
+                    img.style.userSelect    = '';
+                    w.parentNode.insertBefore(img, w);
+                }
+                w.remove();
+            });
+
+            // Remove modal de conteúdo se aberto
+            const bd = document.getElementById('front18-content-backdrop');
+            if (bd) bd.remove();
+
+            // Define sessão como "gate já aprovada" e dispara content blur
+            sessionStorage.setItem(SESSION_KEY, '1');
+
+            // Usa a função global exposta pelo injector
+            if (typeof window.__f18EnableContentBlur === 'function') {
+                window.__f18EnableContentBlur();
+            } else {
+                // Fallback: recarrega a página (gate será pulada por data-skip-gate)
+                location.reload();
+            }
+            atualizarStatus();
+        }
+
+        function testarGateCompleto() {
+            // Limpa sessão e recarrega sem skip-gate para testar fluxo completo
+            sessionStorage.removeItem(SESSION_KEY);
+            sessionStorage.removeItem(UNLOCK_KEY);
+            // Remove o atributo skip-gate temporariamente via reload com param
+            window.location.href = '/teste-blur.html?full=1';
+        }
+    </script>
+
+</body>
+</html>

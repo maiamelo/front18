@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Front18 | Login</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/front18.css">
+    <style>
+        .auth-wrapper { position: relative; overflow: hidden; }
+        .red-blur {
+            position: absolute; right: -50px; bottom: -50px;
+            width: 400px; height: 400px; background: var(--accent-red);
+            filter: blur(200px); opacity: 0.15; z-index: 0;
+        }
+        .msg-error {
+            background: rgba(230,0,0,0.1); border: 1px solid rgba(230,0,0,0.3);
+            color: var(--accent-red); padding: 10px 14px; font-size: 0.85rem;
+            margin-bottom: 1rem; display: none; border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <header style="position: absolute; top: 0; left: 0; width: 100%; padding: 30px 5%; display: flex; justify-content: space-between; align-items: center; z-index: 10;">
+        <a href="index.html" class="logo">FRONT<span>18</span></a>
+        <a href="index.html" class="btn" style="padding: 0.5rem 1.5rem; font-size: 0.8rem; border-color: var(--text-secondary); color: var(--text-secondary);">← Voltar ao Início</a>
+    </header>
+    <div class="auth-wrapper">
+        <div class="red-blur"></div>
+        <div class="auth-box gsap-fade" style="position: relative; z-index: 1;">
+            <h2 style="font-size: 2rem; margin-bottom: 2rem; text-align: center;">Entrar no Painel</h2>
+
+            <div id="msgError" class="msg-error"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" placeholder="seu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" id="btnLogin" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Acessar Dashboard</button>
+            </form>
+            <p style="text-align: center; margin-top: 2rem; font-size: 0.9rem;">Não tem conta? <a href="cadastro.html" class="text-red">Cadastrar grátis</a></p>
+        </div>
+    </div>
+
+    <!-- GSAP CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script>
+        gsap.from(".auth-box", { y: 30, opacity: 0, duration: 0.8, ease: "power3.out" });
+
+        const btnLogin = document.getElementById('btnLogin');
+        const msgError = document.getElementById('msgError');
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            msgError.style.display = 'none';
+            btnLogin.disabled = true;
+            btnLogin.textContent = 'Autenticando...';
+
+            const email = document.getElementById('email').value.trim();
+            const senha = document.getElementById('password').value;
+
+            try {
+                const res  = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, senha })
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    localStorage.setItem('f18_session', data.email);
+                    localStorage.setItem('f18_client_id', data.client_id);
+                    window.location.href = 'dashboard.html';
+                } else {
+                    msgError.textContent = data.message || 'Erro ao autenticar.';
+                    msgError.style.display = 'block';
+                    btnLogin.disabled = false;
+                    btnLogin.textContent = 'Acessar Dashboard';
+                }
+            } catch (err) {
+                msgError.textContent = 'Erro de conexão. Tente novamente.';
+                msgError.style.display = 'block';
+                btnLogin.disabled = false;
+                btnLogin.textContent = 'Acessar Dashboard';
+            }
+        });
+    </script>
+</body>
+</html>
