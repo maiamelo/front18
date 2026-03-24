@@ -25,7 +25,9 @@ try {
 <body>
 
     <nav>
-        <a href="?route=landing" class="logo">FRONT<span>18</span></a>
+        <a href="?route=landing" class="logo" style="display: flex; align-items: center;">
+            <img src="public/img/logo.png" alt="Front18 Logo" style="height: 40px; object-fit: contain;">
+        </a>
         <div class="nav-links">
             <a href="#sobre">Sobre</a>
             <a href="#demo">Demo</a>

@@ -235,7 +235,7 @@ $myOrigins = $myOrigins ?? [];
             <div class="w-6 h-6 rounded bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center mr-2 shadow-lg shadow-primary-500/20">
                 <i class="ph-bold ph-shield-check text-white text-xs"></i>
             </div>
-            <h1 class="font-bold text-sm tracking-tight text-white">Front18<span class="text-primary-500">Pro</span></h1>
+            <img src="public/img/logo.png" alt="Front18 Logo" style="height: 24px; object-fit: contain;">
         </div>
         
         <div class="px-6 py-4 flex items-center gap-3 border-b border-slate-800">

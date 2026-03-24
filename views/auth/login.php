@@ -96,12 +96,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Caixa de Login Glassmorphism -->
     <div class="bg-slate-900/80 backdrop-blur-xl p-10 rounded-3xl shadow-2xl border border-white/10 w-full max-w-md mx-4 relative z-10 transition-transform hover:border-white/20 hover:shadow-primary-500/10 hover:shadow-2xl">
         <div class="flex justify-center mb-6">
-            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center shadow-lg shadow-red-500/20">
-                <i class="ph-bold ph-shield-check text-white text-3xl"></i>
-            </div>
+            <img src="public/img/logo.png" alt="Front18 Logo" style="height: 60px; object-fit: contain;">
         </div>
-        
-        <h1 class="text-center text-3xl font-bold bg-gradient-to-r from-red-600 to-red-400 bg-clip-text text-transparent mb-2">FRONT<span class="text-white">18</span></h1>
         <p class="text-center text-slate-400 text-sm font-medium mb-8">Autenticação Corporativa de Risco MIT</p>
         
         <?php if($error): ?>
