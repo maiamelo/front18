@@ -7,7 +7,7 @@
 define('FRONT18_DB_HOST', 'localhost');
 define('FRONT18_DB_NAME', 'agegate');
 define('FRONT18_DB_USER', 'root');
-define('FRONT18_DB_PASS', '');
+define('FRONT18_DB_PASS', 'root');
 
 // Segurança & Criptografia
 define('FRONT18_XOR_KEY', 'agegate_xor_key_2026');

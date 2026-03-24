@@ -41,8 +41,10 @@ try {
             <div class="hero-text gsap-up">
                 <h1>Proteja seu conteúdo +18 com <span class="text-red">verificação facial</span> em segundos.</h1>
                 <p class="hero-p">A catraca inteligente que bloqueia menores de idade <strong style="color:#fff;">antes</strong> que eles vejam qualquer conteúdo — sem formulários, sem CPF, sem fricção para o usuário adulto. Apenas um olhar de câmera e pronto.</p>
-                <a href="#planos" class="btn btn-primary">Iniciar Teste (200 Validações)</a>
-                <a href="#sobre" class="btn" style="margin-left: 1rem;">Como Funciona →</a>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem;">
+                    <a href="#planos" class="btn btn-primary">Iniciar Teste Livre</a>
+                    <a href="#sobre" class="btn">Como Funciona →</a>
+                </div>
             </div>
             <div class="hero-visual gsap-fade">
                 <div class="mockup-card">
@@ -51,15 +53,38 @@ try {
                         <div style="position: absolute; border: 2px solid var(--accent-red); width: 80px; height: 80px; left: 50%; top: 50%; transform: translate(-50%, -50%);"></div>
                         <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); color: var(--accent-red); font-family: monospace;">ANALISANDO...</div>
                     </div>
-                    <a href="?route=login" class="btn btn-primary" style="width: 100%; display:block; text-align:center;">Testar Catraca Real</a>
+                    <a href="#" onclick="launchRealDemo(event)" class="btn btn-primary" style="width: 100%; display:block; text-align:center;">Testar Catraca Real</a>
                 </div>
             </div>
         </div>
     </header>
 
-    <section id="sobre" class="container">
-        <h2 class="gsap-up">Por que o <span class="text-red">Front18</span>?</h2>
-        <p class="gsap-up" style="margin-top: 1rem; font-size: 1.25rem; max-width: 700px;">A solução tradicional exige formulários, documentos ou CPF — e ainda assim é facilmente burlada. O Front18 usa o rosto como senha: rápido, anônimo e impossível de falsificar com uma foto.</p>
+    <script>
+    function launchRealDemo(e) {
+        e.preventDefault();
+        sessionStorage.removeItem('f18_gate_ok_DEMO_SAAS');
+        sessionStorage.removeItem('f18_unlocked_DEMO_SAAS');
+        
+        if (!document.getElementById('f18-real-script')) {
+            var s = document.createElement('script');
+            s.id = 'f18-real-script';
+            s.src = "public/js/front18-injector.js";
+            s.setAttribute("data-client", "DEMO_SAAS");
+            document.body.appendChild(s);
+        } else {
+            if (typeof window.__f18LoadGate === 'function') {
+                // Ensure mainGateUnlocked is forcibly false before loading because it's a demo!
+                window.__f18LoadGate();
+            }
+        }
+    }
+    </script>
+
+
+    <section id="sobre" style="padding: 80px 0;">
+        <div class="container">
+            <h2 class="gsap-up">Por que o <span class="text-red">Front18</span>?</h2>
+            <p class="gsap-up" style="margin-top: 0.5rem; margin-bottom: 3rem; font-size: 1.15rem; max-width: 700px; line-height: 1.6; color: var(--text-secondary);">A solução tradicional exige formulários, documentos ou CPF — e ainda assim é facilmente burlada. O Front18 usa o rosto como senha: rápido, anônimo e impossível de falsificar com uma foto.</p>
         
         <div class="features-grid">
             <div class="feature-card gsap-up stagger">
@@ -74,48 +99,50 @@ try {
                 <h3>Ativo em 30 Segundos</h3>
                 <p>Um único trecho de código colado no cabeçalho do seu site já ativa a catraca completa — com bloqueio de tela, verificação por câmera e painel de logs de diligência forense.</p>
             </div>
+            </div>
         </div>
     </section>
 
-    <section id="demo" class="container" style="border-top: 1px solid var(--border-color);">
-        <h2 class="gsap-up" style="text-align:center;">Veja as <span class="text-red">Três Camadas</span> em Ação</h2>
-        <p class="gsap-up" style="text-align:center; margin: 1rem auto 4rem; font-size: 1.1rem; max-width: 680px; color: var(--text-secondary);">
-            O FRONT18 protege seu conteúdo em diversos níveis de segurança baseados no Backend. Nenhum invasor consegue quebrar a fechadura da camada 3.
-        </p>
+    <section id="demo" style="border-top: 1px solid var(--border-color); padding: 80px 0;">
+        <div class="container">
+            <h2 class="gsap-up" style="text-align:center;">Veja as <span class="text-red">Duas Camadas</span> em Ação</h2>
+            <p class="gsap-up" style="text-align:center; margin-top: 0.5rem; margin-bottom: 3rem; font-size: 1.1rem; max-width: 680px; color: var(--text-secondary); margin-left: auto; margin-right: auto; line-height: 1.6;">
+                O FRONT18 protege seu conteúdo em duas etapas: primeiro bloqueia o acesso ao site, depois exige verificação individual para cada imagem ou vídeo sensível.
+            </p>
 
         <!-- DOIS CARDS LADO A LADO -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1100px; margin: 0 auto 3rem; align-items: stretch;">
+        <div id="demo-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1100px; margin: 0 auto 3rem; align-items: stretch;">
 
             <!-- CARD 1: AGE GATE -->
             <div class="gsap-up stagger" style="border: 1px solid var(--border-color); background: var(--bg-surface); padding: 2.5rem 2rem; border-radius: 12px; display: flex; flex-direction: column;">
                 <div>
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem;">
                         <span style="background: rgba(230,0,0,0.15); color: var(--accent-red); font-size: 0.7rem; font-weight:800; letter-spacing:0.12em; padding: 4px 10px; border: 1px solid rgba(230,0,0,0.3); font-family: var(--font-display); border-radius: 4px;">ETAPA 1</span>
-                        <span style="color: var(--text-secondary); font-size: 0.85rem;">Catraca Obrigatória com SLA Jurídico</span>
+                        <span style="color: var(--text-secondary); font-size: 0.85rem;">Age Gate (Bloqueio Total)</span>
                     </div>
-                    <h3 style="font-size: 1.3rem; margin-bottom: 0.75rem; color: #fff;">Bloqueio Total do Site</h3>
+                    <h3 style="font-size: 1.3rem; margin-bottom: 0.75rem; color: #fff;">Catraca de Entrada</h3>
                     <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 2rem; line-height: 1.6;">
-                        Antes de ver qualquer conteúdo, o visitante precisa passar pela verificação biométrica. O site inteiro fica bloqueado.
+                        Antes de ver qualquer conteúdo, o visitante precisa passar pela verificação facial. O site inteiro fica bloqueado.
                     </p>
 
                     <!-- MOCKUP DO GATE -->
                     <div style="background: #000; border: 1px solid var(--border-color); position: relative; height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem; border-radius: 8px;">
                         <div style="position:absolute; inset:0; background: linear-gradient(135deg, #1a0a0a 0%, #0a0a1a 100%); filter: blur(4px); opacity:0.8;"></div>
-                        <div style="position:relative; z-index:2; text-align:center; background: rgba(10,10,10,0.92); border: 1px solid rgba(230,0,0,0.35); border-top: 3px solid var(--accent-red); padding: 20px 24px; width: 210px; border-radius: 6px;">
-                            <div style="font-size:0.6rem; color:var(--accent-red); font-family:var(--font-display); letter-spacing:0.1em; margin-bottom:8px; border:1px solid rgba(230,0,0,0.3); display:inline-block; padding:2px 8px; border-radius: 4px;">ENGINE TENSORFLOW</div>
+                        <div style="position:relative; z-index:2; text-align:center; background: rgba(10,10,10,0.92); border: 1px solid rgba(230,0,0,0.35); border-top: 3px solid var(--accent-red); padding: 20px 24px; width: 260px; border-radius: 6px;">
+                            <div style="font-size:0.6rem; color:var(--accent-red); font-family:var(--font-display); letter-spacing:0.1em; margin-bottom:8px; border:1px solid rgba(230,0,0,0.3); display:inline-block; padding:2px 8px; border-radius: 4px;">ENGINE NEURAL LOCAL</div>
                             <div style="font-size:0.85rem; font-weight:800; color:#fff; font-family:var(--font-display); margin-bottom:8px;">ACESSO +18</div>
-                            <div style="width:100%; height:60px; background:#111; border:1px solid #222; margin-bottom:10px; display:flex; align-items:center; justify-content:center; position:relative; border-radius: 4px;">
-                                <div style="width:32px; height:32px; border:2px solid var(--accent-red); border-radius: 50%;"></div>
+                            <div style="width:100%; height:60px; background:#111; border:1px solid rgba(230,0,0,0.2); margin-bottom:10px; display:flex; align-items:center; justify-content:center; position:relative; border-radius: 4px;">
+                                <div style="width:36px; height:36px; border:1px solid var(--accent-red); border-radius: 50%;"></div>
                                 <div style="position:absolute; bottom:4px; left:50%; transform:translateX(-50%); font-size:0.55rem; color:var(--accent-red); font-family:monospace;">ANALISANDO...</div>
                             </div>
-                            <div style="background:var(--accent-red); color:#fff; font-size:0.65rem; font-weight:800; padding:6px; font-family:var(--font-display); letter-spacing:0.08em; border-radius: 4px;">LOCKED OUT</div>
+                            <div style="background:var(--accent-red); color:#fff; font-size:0.65rem; font-weight:800; padding:8px 6px; font-family:var(--font-display); letter-spacing:0.08em; border-radius: 4px; cursor: pointer;">ANALISAR BIOMETRIA</div>
                         </div>
                     </div>
                 </div>
 
                 <div style="margin-top: auto;">
-                    <a href="?route=login" class="btn btn-primary" style="width:100%; text-align:center; font-size:0.9rem; padding: 0.85rem; border-radius: 8px;">
-                        → Criar Acesso Lojista
+                    <a href="#" onclick="launchRealDemo(event)" class="btn btn-primary" style="width:100%; text-align:center; font-size:0.9rem; padding: 0.85rem; border-radius: 8px;">
+                        → TESTAR O AGE GATE AO VIVO
                     </a>
                 </div>
             </div>
@@ -124,55 +151,78 @@ try {
             <div class="gsap-up stagger" style="border: 1px solid var(--border-color); background: var(--bg-surface); padding: 2.5rem 2rem; border-radius: 12px; display: flex; flex-direction: column;">
                 <div>
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem;">
-                        <span style="background: rgba(0,150,255,0.12); color: #4da6ff; font-size: 0.7rem; font-weight:800; letter-spacing:0.12em; padding: 4px 10px; border: 1px solid rgba(0,150,255,0.3); font-family: var(--font-display); border-radius: 4px;">Camada Oculta</span>
-                        <span style="color: var(--text-secondary); font-size: 0.85rem;">Autenticação PHP Server-Side</span>
+                        <span style="background: rgba(0,150,255,0.12); color: #4da6ff; font-size: 0.7rem; font-weight:800; letter-spacing:0.12em; padding: 4px 10px; border: 1px solid rgba(0,150,255,0.3); font-family: var(--font-display); border-radius: 4px;">ETAPA 2</span>
+                        <span style="color: var(--text-secondary); font-size: 0.85rem;">Content Blur (Por Imagem)</span>
                     </div>
-                    <h3 style="font-size: 1.3rem; margin-bottom: 0.75rem; color: #fff;">Injeção Criptografada</h3>
+                    <h3 style="font-size: 1.3rem; margin-bottom: 0.75rem; color: #fff;">Proteção de Conteúdo</h3>
                     <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 2rem; line-height: 1.6;">
-                        Mesmo que um programador avance pelo cadeado Front-end, o Front18 mantém o conteúdo central protegido dentro do servidor (SaaS) e só injeta a página após assinar a Hash LGPD.
+                        Após entrar, cada imagem ou vídeo sensível exige verificação facial individual para ser visualizada.
                     </p>
 
                     <!-- MOCKUP CONTENT BLUR INTERATIVO -->
                     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 2rem;">
-                        <div class="f18demo-item" style="position:relative;cursor:pointer;overflow:hidden;height:120px;border-radius:6px;" onclick="f18DemoUnlock(this)">
-                            <img src="https://picsum.photos/seed/f1/200/120" style="width:100%;height:100%;object-fit:cover;filter:blur(10px) saturate(0.3);transition:filter 0.5s;" alt="conteúdo">
+                        <div class="f18demo-item" style="position:relative;cursor:pointer;overflow:hidden;height:120px;border-radius:6px;" onclick="f18DemoUnlockFake(this)">
+                            <img src="https://picsum.photos/seed/f1/200/120" data-f18-demo="blur" style="width:100%;height:100%;object-fit:cover;filter:blur(10px) saturate(0.3);transition:filter 0.5s;" alt="conteúdo">
                             <div class="f18demo-overlay" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);gap:5px;">
-                                <span style="font-size:22px;">🔞</span>
+                                <div style="width:24px;height:24px;border-radius:50%;border:2px solid var(--accent-red);color:var(--accent-red);font-size:10px;font-weight:bold;display:flex;align-items:center;justify-content:center;background:rgba(255,0,0,0.1);">18</div>
+                                <span style="font-size:8px;color:#fff;font-weight:bold;">CLIQUE P/ VER</span>
+                            </div>
+                        </div>
+                        <div class="f18demo-item" style="position:relative;cursor:pointer;overflow:hidden;height:120px;border-radius:6px;" onclick="f18DemoUnlockFake(this)">
+                            <img src="https://picsum.photos/seed/f3/200/120" data-f18-demo="blur" style="width:100%;height:100%;object-fit:cover;filter:blur(10px) saturate(0.3);transition:filter 0.5s;" alt="conteúdo">
+                            <div class="f18demo-overlay" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);gap:5px;">
+                                <div style="width:24px;height:24px;border-radius:50%;border:2px solid var(--accent-red);color:var(--accent-red);font-size:10px;font-weight:bold;display:flex;align-items:center;justify-content:center;background:rgba(255,0,0,0.1);">18</div>
+                                <span style="font-size:8px;color:#fff;font-weight:bold;">CLIQUE P/ VER</span>
                             </div>
                         </div>
                         <div class="f18demo-item" style="position:relative;overflow:hidden;height:120px;border-radius:6px;">
-                            <img src="https://picsum.photos/seed/f3/200/120" style="width:100%;height:100%;object-fit:cover;" alt="conteúdo liberado">
-                            <div style="position:absolute;inset:0;display:flex;align-items:flex-end;padding:6px;background:linear-gradient(transparent,rgba(0,0,0,0.4));">
+                            <img src="https://picsum.photos/seed/f4/200/120" data-f18-demo="blur" class="f18-real-img" style="width:100%;height:100%;object-fit:cover;" alt="conteúdo liberado">
+                            <div class="f18-real-badge" style="position:absolute;inset:0;display:flex;align-items:flex-end;padding:6px;background:linear-gradient(transparent,rgba(0,0,0,0.4));">
                                 <span style="background:rgba(0,255,100,0.2);border:1px solid rgba(0,255,100,0.5);color:#00FF80;font-size:8px;padding:2px 7px;font-family:monospace;border-radius:4px;">✓ LIBERADO</span>
                             </div>
                         </div>
-                        <div class="f18demo-item" style="position:relative;cursor:pointer;overflow:hidden;height:120px;border-radius:6px;" onclick="f18DemoUnlock(this)">
-                            <img src="https://picsum.photos/seed/f5/200/120" style="width:100%;height:100%;object-fit:cover;filter:brightness(0);transition:filter 0.5s;" alt="conteúdo">
+                        <div class="f18demo-item" style="position:relative;cursor:pointer;overflow:hidden;height:120px;border-radius:6px;" onclick="f18DemoUnlockFake(this)">
+                            <img src="https://picsum.photos/seed/f6/200/120" data-f18-demo="blur" style="width:100%;height:100%;object-fit:cover;filter:blur(10px) saturate(0.3);transition:filter 0.5s;" alt="conteúdo">
                             <div class="f18demo-overlay" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);gap:5px;">
-                                <span style="font-size:22px;">🥷 </span><span style="color:#fff;font-size:8px">BLACKOUT</span>
+                                <div style="width:24px;height:24px;border-radius:50%;border:2px solid var(--accent-red);color:var(--accent-red);font-size:10px;font-weight:bold;display:flex;align-items:center;justify-content:center;background:rgba(255,0,0,0.1);">18</div>
+                                <span style="font-size:8px;color:#fff;font-weight:bold;">CLIQUE P/ VER</span>
+                            </div>
+                        </div>
+                        <div class="f18demo-item" style="position:relative;cursor:pointer;overflow:hidden;height:120px;border-radius:6px;" onclick="f18DemoUnlockFake(this)">
+                            <img src="https://picsum.photos/seed/f7/200/120" data-f18-demo="blur" style="width:100%;height:100%;object-fit:cover;filter:blur(10px) saturate(0.3);transition:filter 0.5s;" alt="conteúdo">
+                            <div class="f18demo-overlay" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);gap:5px;">
+                                <div style="width:24px;height:24px;border-radius:50%;border:2px solid var(--accent-red);color:var(--accent-red);font-size:10px;font-weight:bold;display:flex;align-items:center;justify-content:center;background:rgba(255,0,0,0.1);">18</div>
+                                <span style="font-size:8px;color:#fff;font-weight:bold;">CLIQUE P/ VER</span>
+                            </div>
+                        </div>
+                        <div class="f18demo-item" style="position:relative;cursor:pointer;overflow:hidden;height:120px;border-radius:6px;" onclick="f18DemoUnlockFake(this)">
+                            <img src="https://picsum.photos/seed/f8/200/120" data-f18-demo="blur" style="width:100%;height:100%;object-fit:cover;filter:blur(10px) saturate(0.3);transition:filter 0.5s;" alt="conteúdo">
+                            <div class="f18demo-overlay" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);gap:5px;">
+                                <div style="width:24px;height:24px;border-radius:50%;border:2px solid var(--accent-red);color:var(--accent-red);font-size:10px;font-weight:bold;display:flex;align-items:center;justify-content:center;background:rgba(255,0,0,0.1);">18</div>
+                                <span style="font-size:8px;color:#fff;font-weight:bold;">CLIQUE P/ VER</span>
                             </div>
                         </div>
                     </div>
 
                     <p style="font-size:0.8rem; color: var(--text-secondary); margin-bottom: 2rem; text-align:center;">
-                        ☝️ <em>Suporta modelos passivos (Blur) e extremos (Blackout)</em>
+                        ✌️ <em>Simulação — clique nas imagens borradas para ver a animação.</em>
                     </p>
                 </div>
 
                 <div style="margin-top: auto;">
-                    <a href="#planos" class="btn" style="width:100%; text-align:center; font-size:0.9rem; padding: 0.85rem; border-color: #4da6ff; color: #4da6ff; border-radius: 8px;">
-                        → Ver Planos
-                    </a>
+                    <button onclick="launchBlurDemo(event)" class="btn" style="width:100%; justify-content:center; background: rgba(0,150,255,0.1); border-color: #4da6ff; color: #4da6ff; border-radius: 8px;">
+                        → TESTAR O CONTENT BLUR AO VIVO (CÂMERA REAL)
+                    </button>
                 </div>
             </div>
         </div>
 
         <style>
             @keyframes f18DemoSpin { to { transform: rotate(360deg); } }
-            @media (max-width: 768px) { #demo > div:nth-child(3) { grid-template-columns: 1fr !important; } }
+            @media (max-width: 900px) { #demo-grid { grid-template-columns: 1fr !important; } }
         </style>
         <script>
-            function f18DemoUnlock(el) {
+            function f18DemoUnlockFake(el) {
                 if (el._f18processing) return;
                 el._f18processing = true;
 
@@ -189,24 +239,66 @@ try {
                 setTimeout(function () {
                     img.style.filter = 'none';
                     overlay.style.background = 'rgba(0,255,100,0.06)';
-                    overlay.innerHTML = '<span style="background:rgba(0,255,100,0.18);border:1px solid rgba(0,255,100,0.5);color:#00FF80;font-size:8px;padding:3px 8px;font-family:monospace;border-radius:2px;">✓ API NODE APPROVED</span>';
+                    overlay.innerHTML = '<span style="background:rgba(0,255,100,0.18);border:1px solid rgba(0,255,100,0.5);color:#00FF80;font-size:8px;padding:3px 8px;font-family:monospace;border-radius:2px;">✓ LIBERADO</span>';
                     el.style.cursor = 'default';
                     el.onclick = null;
                 }, 1400);
             }
+
+            function launchBlurDemo(e) {
+                e.preventDefault();
+                sessionStorage.removeItem('f18_gate_ok_DEMO_SAAS'); // Clear previous tests
+                sessionStorage.removeItem('f18_unlocked_DEMO_SAAS'); // Clear blurred images tests
+                
+                // Transforma as imagens de simulação em imgs nativas do SDK Front18 dinamicamente!
+                document.querySelectorAll('img[data-f18-demo="blur"]').forEach(function(img) {
+                    img.setAttribute('data-front18', 'blur'); // Agora o SDK vai caçá-las!
+                    
+                    // Remover a capa de simulação falsa
+                    var overlay = img.nextElementSibling;
+                    if (overlay && overlay.classList.contains('f18demo-overlay')) {
+                        overlay.style.display = 'none';
+                    }
+                    if (img.parentNode && img.parentNode.classList.contains('f18-blur-wrapper')) {
+                        // Restore image outside wrapper in case of multiple clicks
+                        img.style.filter = 'blur(25px) saturate(0.4)';
+                        img.style.pointerEvents = '';
+                        img.parentNode.parentNode.insertBefore(img, img.parentNode);
+                        img.parentNode.removeChild(img.nextSibling); // remove wrapper
+                    }
+                });
+
+                // Inject the SDK explicitly forcing it to SKIP the main gate
+                // and jump immediately to Content Blur logic!
+                if (!document.getElementById('f18-blur-script')) {
+                    var s = document.createElement('script');
+                    s.id = 'f18-blur-script';
+                    s.src = "public/js/front18-injector.js";
+                    s.setAttribute("data-client", "DEMO_SAAS");
+                    s.setAttribute("data-skip-gate", "true");
+                    document.body.appendChild(s);
+                } else {
+                    // se o SDK ja foi injetado (repetição de teste)
+                    if (typeof window.__f18EnableContentBlur === 'function') {
+                        window.__f18EnableContentBlur();
+                    }
+                }
+            }
         </script>
         
-        <p style="text-align:center; color: var(--text-secondary); font-size: 0.85rem; margin-top: 1rem;">
-            A inteligência matemática embarcada preserva 100% da privacidade visual do usuário e blinda judicialmente sua empresa.
-        </p>
+            <p style="text-align:center; color: var(--text-secondary); font-size: 0.85rem; margin-top: 1rem; max-width: none;">
+                Nenhuma foto é armazenada ou enviada para nossos servidores. A IA roda 100% no navegador do visitante.
+            </p>
+        </div>
     </section>
 
     <!-- PLANOS PHP DINÂMICO -->
-    <section id="planos" class="container">
-        <h2 style="text-align: center;" class="gsap-up">Planos B2B Flexíveis</h2>
-        <p style="text-align: center; margin: 0 auto; margin-top: 1rem;" class="gsap-up">Para blogs iniciantes até DataCenters complexos com proteção ativa contra VPN e Proxies.</p>
-        
-        <div class="plans-grid" style="margin-top: 3rem;">
+    <section id="planos" style="padding: 80px 0;">
+        <div class="container">
+            <h2 style="text-align: center;" class="gsap-up">Planos B2B Flexíveis</h2>
+            <p style="text-align: center; margin: 0.5rem auto 3rem; font-size: 1.1rem; max-width: 680px; color: var(--text-secondary); line-height: 1.6;" class="gsap-up">Para blogs iniciantes até DataCenters complexos com proteção ativa contra VPN e Proxies.</p>
+            
+            <div class="plans-grid" style="margin-top: 2rem;">
             <?php if(empty($planos)): ?>
                <div style="text-align:center;width:100%;color:red;">Não há planos configurados no banco de dados do SaaS.</div>
             <?php else: ?>
@@ -244,8 +336,8 @@ try {
                             <li style="opacity: 0.4; text-decoration: line-through;">WAF Blindagem Anti-Scraping</li>
                         <?php endif; ?>
                     </ul>
-                    <a href="?route=register&plan_id=<?= $plan['id'] ?>" class="btn <?= $isFeatured ? 'btn-primary' : '' ?>" style="width: 100%;">
-                        Começar Trial (200 Hit Grátis)
+                    <a href="?route=register&plan_id=<?= $plan['id'] ?>" class="btn <?= $isFeatured ? 'btn-primary' : '' ?>" style="width: 100%; padding: 0.85rem 0.5rem; font-size: 0.9rem;">
+                        Iniciar Teste Livre
                     </a>
                 </div>
                 <?php endforeach; ?>
@@ -261,15 +353,17 @@ try {
                     <li>White-label (Seu logotipo C-level)</li>
                     <li>Equipe Jurídica Front18 Dedicada</li>
                 </ul>
-                <a href="mailto:comercial@front18.com?subject=Plano%20Enterprise" class="btn" style="width: 100%;">Falar com Vendas</a>
+                <a href="mailto:comercial@front18.com?subject=Plano%20Enterprise" class="btn" style="width: 100%; padding: 0.85rem 0.5rem; font-size: 0.9rem;">Falar com Vendas</a>
             </div>
+        </div>
         </div>
     </section>
 
-    <section id="faq" class="container">
-        <h2 class="gsap-up" style="margin-bottom: 0.5rem;">Perguntas Frequentes (Compliance Layer)</h2>
-        <p class="gsap-up" style="color: var(--text-secondary); margin-bottom: 3rem;">Tudo que você precisa saber antes de blindar a sua empresa digital.</p>
-        <div class="faq-list">
+    <section id="faq" style="padding: 80px 0;">
+        <div class="container">
+            <h2 class="gsap-up" style="text-align: center;">Perguntas Frequentes (Compliance Layer)</h2>
+            <p class="gsap-up" style="text-align: center; margin-top: 0.5rem; margin-bottom: 3rem; font-size: 1.1rem; color: var(--text-secondary); line-height: 1.6;">Tudo que você precisa saber antes de blindar a sua empresa digital.</p>
+            <div class="faq-list">
 
             <div class="faq-item gsap-up stagger">
                 <div class="faq-q">A verificação acerta a idade na primeira tentativa? <span class="faq-icon">+</span></div>

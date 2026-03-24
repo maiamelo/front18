@@ -25,8 +25,8 @@
     var skipGate   = scriptTag ? scriptTag.getAttribute('data-skip-gate') === 'true' : false;
     var urlFull    = new URLSearchParams(window.location.search).get('full') === '1';
 
-    // URL de produção (sempre HTTPS)
-    var APP_URL = 'https://front18.b20robots.com.br';
+    // Resolve dinamicamente de onde o script foi carregado para setar a URL da API B2B
+    var APP_URL = scriptTag && scriptTag.src ? new URL(scriptTag.src).origin : 'https://front18.b20robots.com.br';
 
     // ── Chaves de sessão ──────────────────────────────────────────────────
     var SESSION_KEY  = 'f18_gate_ok_' + clientId;
@@ -65,6 +65,8 @@
     // =========================================================================
     function loadFront18() {
         // Pular gate: modo teste OU sessão já aprovada
+        mainGateUnlocked = sessionStorage.getItem(SESSION_KEY) === '1';
+
         if ((skipGate && !urlFull) || mainGateUnlocked) {
             if (!mainGateUnlocked) {
                 mainGateUnlocked = true;
@@ -139,33 +141,13 @@
 
         // Fetch do Payload Ofuscado do Gateway
         var h = encodeURIComponent(window.location.hostname);
-        fetch(APP_URL + '/api/gateway?client=' + clientId + '&host=' + h + '&mode=gate')
-            .then(function(res) { return res.json(); })
-            .then(function(data) {
-                if (data.status !== 'success') throw new Error('Gateway Rejected');
-                
-                // Decode from Base64 -> XOR (Lógica inversa)
-                var raw = atob(data.payload);
-                var key = 'fallback_secret_front18'; // Ideal seria carregar dinamicamente, mas pra Fase 3 deixamos fixo (combinado com o backend)
-                var decodedHtml = '';
-                for (var i = 0; i < raw.length; i++) {
-                    decodedHtml += String.fromCharCode(raw.charCodeAt(i) ^ key.charCodeAt(i % key.length));
-                }
-
-                // Injeta no Iframe
-                var idoc = iframe.contentWindow || iframe.contentDocument.document || iframe.contentDocument;
-                idoc.document.open();
-                idoc.document.write(decodedHtml);
-                idoc.document.close();
-
-                var sp = document.getElementById('f18-gate-spinner');
-                if (sp) sp.style.display = 'none';
-                iframe.style.opacity = '1';
-            })
-            .catch(function(err) {
-                console.error('[FRONT18] ⚠️ Erro ao carregar Borda Segura (XOR Gateway):', err);
-                forceUnlockGate(); // Em caso de falha de conexão (firewall etc), não trava o lojista
-            });
+        iframe.src = APP_URL + '/?route=verificacao&client=' + clientId + '&host=' + h;
+        
+        iframe.addEventListener('load', function() {
+            var sp = document.getElementById('f18-gate-spinner');
+            if (sp) sp.style.display = 'none';
+            iframe.style.opacity = '1';
+        });
 
         // Fallback de segurança: desbloqueia após 30s se o script não carregar
         gateTimeoutId = setTimeout(function () {
@@ -239,16 +221,29 @@
             el.style.pointerEvents = 'none';
             el.style.userSelect    = 'none';
 
+            // Verifica se a imagem é pequena (Modo Miniatura)
+            var isSmall = el.clientHeight < 160;
+
             // ── Overlay clicável ───────────────────────────────────────────
             var overlay = document.createElement('div');
             overlay.className = 'f18-content-overlay';
-            overlay.innerHTML = [
-                '<div class="f18-unlock-badge">',
-                '<span style="font-size:26px;line-height:1;">\uD83D\uDD1E</span>',
-                '<span class="f18-badge-text">VERIFICAR +18</span>',
-                '<span class="f18-badge-sub">Clique para confirmar idade</span>',
-                '</div>'
-            ].join('');
+            
+            if (isSmall) {
+                overlay.innerHTML = [
+                    '<div style="display:flex;flex-direction:column;align-items:center;gap:5px;">',
+                    '<div style="width:24px;height:24px;border-radius:50%;border:2px solid #E60000;color:#E60000;font-size:10px;font-weight:bold;display:flex;align-items:center;justify-content:center;background:rgba(255,0,0,0.1);">18</div>',
+                    '<span style="font-size:8px;color:#fff;font-weight:bold;">CLIQUE P/ VER</span>',
+                    '</div>'
+                ].join('');
+            } else {
+                overlay.innerHTML = [
+                    '<div class="f18-unlock-badge">',
+                    '<span style="font-size:26px;line-height:1;">\uD83D\uDD1E</span>',
+                    '<span class="f18-badge-text">VERIFICAR +18</span>',
+                    '<span class="f18-badge-sub">Clique para confirmar idade</span>',
+                    '</div>'
+                ].join('');
+            }
             Object.assign(overlay.style, {
                 position:       'absolute',
                 top:            '0',
@@ -307,7 +302,7 @@
         // Iframe da gate de conteúdo
         var iframe = document.createElement('iframe');
         iframe.id  = 'f18-content-iframe';
-        iframe.src = APP_URL + '/verificacao.html?client=' + clientId + '&mode=content';
+        iframe.src = APP_URL + '/?route=verificacao&client=' + clientId + '&mode=content';
         Object.assign(iframe.style, {
             width:        '100%',
             maxWidth:     '480px',
@@ -419,7 +414,23 @@
         }
 
         if (event.data === 'FRONT18_CONTENT_CANCEL') {
+            clearTimeout(gateTimeoutId);
             closeContentGate();
+            
+            var mainGate = document.getElementById('front18-gate');
+            if (mainGate) {
+                if (clientId === 'DEMO_SAAS') {
+                    // Na nossa Landing Page, "Cancelar" simplesmente remove o bloqueio de "Faz de Conta"
+                    mainGate.remove();
+                    if (document.body) {
+                        document.body.style.overflow = '';
+                        document.body.style.position = '';
+                    }
+                } else {
+                    // Para os sites reais dos clientes, "Cancelar" o bloqueio principal significa SER EXPULSO DO SITE!
+                    window.location.href = 'https://google.com';
+                }
+            }
         }
 
         if (event.data === 'FRONT18_VERIFIED_FAIL') {
@@ -431,6 +442,7 @@
     // EXPÕE FUNÇÃO PARA USO EXTERNO (página de teste)
     // =========================================================================
     window.__f18EnableContentBlur = enableContentBlur;
+    window.__f18LoadGate = loadFront18;
 
     // =========================================================================
     // INICIALIZAÇÃO

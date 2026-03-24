@@ -4,10 +4,10 @@
  * Preparado para SaaS Cross-Domain (CORS Dinâmico)
  */
 
-require_once __DIR__ . '/../backend/config.php';
-require_once __DIR__ . '/../backend/SessionManager.php';
-require_once __DIR__ . '/../backend/Database.php';
-require_once __DIR__ . '/../backend/Crypto.php';
+require_once __DIR__ . '/../../src/Config/config.php';
+require_once __DIR__ . '/../../src/Core/SessionManager.php';
+require_once __DIR__ . '/../../src/Core/Database.php';
+require_once __DIR__ . '/../../src/Core/Crypto.php';
 
 // 1. Tratamento Cross-Domain (CORS) com API KEY Estrita (Fase 4/Enterprise)
 // Requer casamento perfeito entre Origin, Host Autenticado e Header X-API-KEY.
