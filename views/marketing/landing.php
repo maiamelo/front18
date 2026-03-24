@@ -84,78 +84,86 @@ try {
         </p>
 
         <!-- DOIS CARDS LADO A LADO -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1100px; margin: 0 auto 3rem;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1100px; margin: 0 auto 3rem; align-items: stretch;">
 
             <!-- CARD 1: AGE GATE -->
-            <div class="gsap-up stagger" style="border: 1px solid var(--border-color); background: var(--bg-surface); padding: 2rem; text-align: left;">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem;">
-                    <span style="background: rgba(230,0,0,0.15); color: var(--accent-red); font-size: 0.7rem; font-weight:800; letter-spacing:0.12em; padding: 4px 10px; border: 1px solid rgba(230,0,0,0.3); font-family: var(--font-display);">ETAPA 1</span>
-                    <span style="color: var(--text-secondary); font-size: 0.85rem;">Catraca Obrigatória com SLA Jurídico</span>
-                </div>
-                <h3 style="font-size: 1.3rem; margin-bottom: 0.75rem; color: #fff;">Bloqueio Total do Site</h3>
-                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.6;">
-                    Antes de ver qualquer conteúdo, o visitante precisa passar pela verificação biométrica. O site inteiro fica bloqueado.
-                </p>
+            <div class="gsap-up stagger" style="border: 1px solid var(--border-color); background: var(--bg-surface); padding: 2.5rem 2rem; border-radius: 12px; display: flex; flex-direction: column;">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem;">
+                        <span style="background: rgba(230,0,0,0.15); color: var(--accent-red); font-size: 0.7rem; font-weight:800; letter-spacing:0.12em; padding: 4px 10px; border: 1px solid rgba(230,0,0,0.3); font-family: var(--font-display); border-radius: 4px;">ETAPA 1</span>
+                        <span style="color: var(--text-secondary); font-size: 0.85rem;">Catraca Obrigatória com SLA Jurídico</span>
+                    </div>
+                    <h3 style="font-size: 1.3rem; margin-bottom: 0.75rem; color: #fff;">Bloqueio Total do Site</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 2rem; line-height: 1.6;">
+                        Antes de ver qualquer conteúdo, o visitante precisa passar pela verificação biométrica. O site inteiro fica bloqueado.
+                    </p>
 
-                <!-- MOCKUP DO GATE -->
-                <div style="background: #000; border: 1px solid var(--border-color); position: relative; height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
-                    <div style="position:absolute; inset:0; background: linear-gradient(135deg, #1a0a0a 0%, #0a0a1a 100%); filter: blur(4px); opacity:0.8;"></div>
-                    <div style="position:relative; z-index:2; text-align:center; background: rgba(10,10,10,0.92); border: 1px solid rgba(230,0,0,0.35); border-top: 3px solid var(--accent-red); padding: 20px 24px; width: 210px;">
-                        <div style="font-size:0.6rem; color:var(--accent-red); font-family:var(--font-display); letter-spacing:0.1em; margin-bottom:8px; border:1px solid rgba(230,0,0,0.3); display:inline-block; padding:2px 8px;">ENGINE TENSORFLOW</div>
-                        <div style="font-size:0.85rem; font-weight:800; color:#fff; font-family:var(--font-display); margin-bottom:8px;">ACESSO +18</div>
-                        <div style="width:100%; height:60px; background:#111; border:1px solid #222; margin-bottom:10px; display:flex; align-items:center; justify-content:center; position:relative;">
-                            <div style="width:32px; height:32px; border:2px solid var(--accent-red);"></div>
-                            <div style="position:absolute; bottom:4px; left:50%; transform:translateX(-50%); font-size:0.55rem; color:var(--accent-red); font-family:monospace;">ANALISANDO...</div>
+                    <!-- MOCKUP DO GATE -->
+                    <div style="background: #000; border: 1px solid var(--border-color); position: relative; height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem; border-radius: 8px;">
+                        <div style="position:absolute; inset:0; background: linear-gradient(135deg, #1a0a0a 0%, #0a0a1a 100%); filter: blur(4px); opacity:0.8;"></div>
+                        <div style="position:relative; z-index:2; text-align:center; background: rgba(10,10,10,0.92); border: 1px solid rgba(230,0,0,0.35); border-top: 3px solid var(--accent-red); padding: 20px 24px; width: 210px; border-radius: 6px;">
+                            <div style="font-size:0.6rem; color:var(--accent-red); font-family:var(--font-display); letter-spacing:0.1em; margin-bottom:8px; border:1px solid rgba(230,0,0,0.3); display:inline-block; padding:2px 8px; border-radius: 4px;">ENGINE TENSORFLOW</div>
+                            <div style="font-size:0.85rem; font-weight:800; color:#fff; font-family:var(--font-display); margin-bottom:8px;">ACESSO +18</div>
+                            <div style="width:100%; height:60px; background:#111; border:1px solid #222; margin-bottom:10px; display:flex; align-items:center; justify-content:center; position:relative; border-radius: 4px;">
+                                <div style="width:32px; height:32px; border:2px solid var(--accent-red); border-radius: 50%;"></div>
+                                <div style="position:absolute; bottom:4px; left:50%; transform:translateX(-50%); font-size:0.55rem; color:var(--accent-red); font-family:monospace;">ANALISANDO...</div>
+                            </div>
+                            <div style="background:var(--accent-red); color:#fff; font-size:0.65rem; font-weight:800; padding:6px; font-family:var(--font-display); letter-spacing:0.08em; border-radius: 4px;">LOCKED OUT</div>
                         </div>
-                        <div style="background:var(--accent-red); color:#fff; font-size:0.65rem; font-weight:800; padding:6px; font-family:var(--font-display); letter-spacing:0.08em;">LOCKED OUT</div>
                     </div>
                 </div>
 
-                <a href="?route=login" class="btn btn-primary" style="width:100%; text-align:center; font-size:0.85rem; padding: 0.75rem;">
-                    → Criar Acesso Lojista
-                </a>
+                <div style="margin-top: auto;">
+                    <a href="?route=login" class="btn btn-primary" style="width:100%; text-align:center; font-size:0.9rem; padding: 0.85rem; border-radius: 8px;">
+                        → Criar Acesso Lojista
+                    </a>
+                </div>
             </div>
 
             <!-- CARD 2: CONTENT BLUR / XOR SERVER -->
-            <div class="gsap-up stagger" style="border: 1px solid var(--border-color); background: var(--bg-surface); padding: 2rem; text-align: left;">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem;">
-                    <span style="background: rgba(0,150,255,0.12); color: #4da6ff; font-size: 0.7rem; font-weight:800; letter-spacing:0.12em; padding: 4px 10px; border: 1px solid rgba(0,150,255,0.3); font-family: var(--font-display);">Camada Oculta</span>
-                    <span style="color: var(--text-secondary); font-size: 0.85rem;">Autenticação PHP Server-Side</span>
+            <div class="gsap-up stagger" style="border: 1px solid var(--border-color); background: var(--bg-surface); padding: 2.5rem 2rem; border-radius: 12px; display: flex; flex-direction: column;">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem;">
+                        <span style="background: rgba(0,150,255,0.12); color: #4da6ff; font-size: 0.7rem; font-weight:800; letter-spacing:0.12em; padding: 4px 10px; border: 1px solid rgba(0,150,255,0.3); font-family: var(--font-display); border-radius: 4px;">Camada Oculta</span>
+                        <span style="color: var(--text-secondary); font-size: 0.85rem;">Autenticação PHP Server-Side</span>
+                    </div>
+                    <h3 style="font-size: 1.3rem; margin-bottom: 0.75rem; color: #fff;">Injeção Criptografada</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 2rem; line-height: 1.6;">
+                        Mesmo que um programador avance pelo cadeado Front-end, o Front18 mantém o conteúdo central protegido dentro do servidor (SaaS) e só injeta a página após assinar a Hash LGPD.
+                    </p>
+
+                    <!-- MOCKUP CONTENT BLUR INTERATIVO -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 2rem;">
+                        <div class="f18demo-item" style="position:relative;cursor:pointer;overflow:hidden;height:120px;border-radius:6px;" onclick="f18DemoUnlock(this)">
+                            <img src="https://picsum.photos/seed/f1/200/120" style="width:100%;height:100%;object-fit:cover;filter:blur(10px) saturate(0.3);transition:filter 0.5s;" alt="conteúdo">
+                            <div class="f18demo-overlay" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);gap:5px;">
+                                <span style="font-size:22px;">🔞</span>
+                            </div>
+                        </div>
+                        <div class="f18demo-item" style="position:relative;overflow:hidden;height:120px;border-radius:6px;">
+                            <img src="https://picsum.photos/seed/f3/200/120" style="width:100%;height:100%;object-fit:cover;" alt="conteúdo liberado">
+                            <div style="position:absolute;inset:0;display:flex;align-items:flex-end;padding:6px;background:linear-gradient(transparent,rgba(0,0,0,0.4));">
+                                <span style="background:rgba(0,255,100,0.2);border:1px solid rgba(0,255,100,0.5);color:#00FF80;font-size:8px;padding:2px 7px;font-family:monospace;border-radius:4px;">✓ LIBERADO</span>
+                            </div>
+                        </div>
+                        <div class="f18demo-item" style="position:relative;cursor:pointer;overflow:hidden;height:120px;border-radius:6px;" onclick="f18DemoUnlock(this)">
+                            <img src="https://picsum.photos/seed/f5/200/120" style="width:100%;height:100%;object-fit:cover;filter:brightness(0);transition:filter 0.5s;" alt="conteúdo">
+                            <div class="f18demo-overlay" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);gap:5px;">
+                                <span style="font-size:22px;">🥷 </span><span style="color:#fff;font-size:8px">BLACKOUT</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p style="font-size:0.8rem; color: var(--text-secondary); margin-bottom: 2rem; text-align:center;">
+                        ☝️ <em>Suporta modelos passivos (Blur) e extremos (Blackout)</em>
+                    </p>
                 </div>
-                <h3 style="font-size: 1.3rem; margin-bottom: 0.75rem; color: #fff;">Injeção Criptografada</h3>
-                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.6;">
-                    Mesmo que um programador avance pelo cadeado Front-end, o Front18 mantém o conteúdo central protegido dentro do servidor (SaaS) e só injeta a página após assinar a Hash LGPD.
-                </p>
 
-                <!-- MOCKUP CONTENT BLUR INTERATIVO -->
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 1.5rem;">
-                    <div class="f18demo-item" style="position:relative;cursor:pointer;overflow:hidden;height:120px;border-radius:4px;" onclick="f18DemoUnlock(this)">
-                        <img src="https://picsum.photos/seed/f1/200/120" style="width:100%;height:100%;object-fit:cover;filter:blur(10px) saturate(0.3);transition:filter 0.5s;" alt="conteúdo">
-                        <div class="f18demo-overlay" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);gap:5px;">
-                            <span style="font-size:22px;">🔞</span>
-                        </div>
-                    </div>
-                    <div class="f18demo-item" style="position:relative;overflow:hidden;height:120px;border-radius:4px;">
-                        <img src="https://picsum.photos/seed/f3/200/120" style="width:100%;height:100%;object-fit:cover;" alt="conteúdo liberado">
-                        <div style="position:absolute;inset:0;display:flex;align-items:flex-end;padding:6px;background:linear-gradient(transparent,rgba(0,0,0,0.4));">
-                            <span style="background:rgba(0,255,100,0.2);border:1px solid rgba(0,255,100,0.5);color:#00FF80;font-size:8px;padding:2px 7px;font-family:monospace;border-radius:2px;">✓ LIBERADO</span>
-                        </div>
-                    </div>
-                    <div class="f18demo-item" style="position:relative;cursor:pointer;overflow:hidden;height:120px;border-radius:4px;" onclick="f18DemoUnlock(this)">
-                        <img src="https://picsum.photos/seed/f5/200/120" style="width:100%;height:100%;object-fit:cover;filter:brightness(0);transition:filter 0.5s;" alt="conteúdo">
-                        <div class="f18demo-overlay" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);gap:5px;">
-                            <span style="font-size:22px;">🥷 </span><span style="color:#fff;font-size:8px">BLACKOUT</span>
-                        </div>
-                    </div>
+                <div style="margin-top: auto;">
+                    <a href="#planos" class="btn" style="width:100%; text-align:center; font-size:0.9rem; padding: 0.85rem; border-color: #4da6ff; color: #4da6ff; border-radius: 8px;">
+                        → Ver Planos
+                    </a>
                 </div>
-
-                <p style="font-size:0.78rem; color: var(--text-secondary); margin-bottom: 1.5rem; text-align:center;">
-                    ☝️ <em>Suporta modelos passivos (Blur) e extremos (Blackout)</em>
-                </p>
-
-                <a href="#planos" class="btn" style="width:100%; text-align:center; font-size:0.85rem; padding: 0.75rem; border-color: #4da6ff; color: #4da6ff;">
-                    → Ver Planos
-                </a>
             </div>
         </div>
 
